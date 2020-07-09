@@ -14,13 +14,15 @@ type Commander interface {
 }
 
 type commander struct {
+	pulselength      time.Duration
 	positiveRelayPin rpio.Pin
 	negativeRelayPin rpio.Pin
 }
 
 // NewCommander ...
-func NewCommander(positiveRelayPin, negativeRelayPin rpio.Pin) Commander {
+func NewCommander(positiveRelayPin, negativeRelayPin rpio.Pin, pulselength time.Duration) Commander {
 	return &commander{
+		pulselength:      pulselength,
 		positiveRelayPin: positiveRelayPin,
 		negativeRelayPin: negativeRelayPin,
 	}
@@ -46,7 +48,7 @@ func (c *commander) Status() Status {
 // puts tension HIGH to both terminals activating the relays
 func (c *commander) Open() {
 	c.setLinesValues(rpio.High, rpio.High)
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(c.pulselength * time.Millisecond)
 	c.setLinesValues(rpio.High, rpio.Low)
 }
 
@@ -54,7 +56,7 @@ func (c *commander) Open() {
 // puts tension LOW to both terminals shutting the relays
 func (c *commander) Close() {
 	c.setLinesValues(rpio.Low, rpio.Low)
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(c.pulselength * time.Millisecond)
 	c.setLinesValues(rpio.Low, rpio.High)
 }
 

@@ -13,7 +13,7 @@ var statusCmd = &cobra.Command{
 	Short: "Retrieve the status of the valve",
 	Run: func(cmd *cobra.Command, args []string) {
 		pp, np := rpio.Pin(positiveRelayPin), rpio.Pin(negativeRelayPin)
-		cmder := valve.NewCommander(pp, np)
+		cmder := valve.NewCommander(pp, np, pulseLength)
 
 		st := cmder.Status()
 		switch st {

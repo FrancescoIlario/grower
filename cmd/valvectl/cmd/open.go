@@ -13,7 +13,7 @@ var openCmd = &cobra.Command{
 	Short: "Opens the valve",
 	Run: func(cmd *cobra.Command, args []string) {
 		pp, np := rpio.Pin(positiveRelayPin), rpio.Pin(negativeRelayPin)
-		cmder := valve.NewCommander(pp, np)
+		cmder := valve.NewCommander(pp, np, pulseLength)
 
 		cmder.Open()
 		fmt.Println("Valve opened")
