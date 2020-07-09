@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package valvepb;
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/FrancescoIlario/usplay/pkg/valvepb";
+
+service ValveService {
+  rpc GetStatus(GetStatusRequest) returns (GetStatusResponse) {}
+  rpc OpenValve(OpenValveRequest) returns (OpenValveResponse) {}
+  rpc CloseValve(CloseValveRequest) returns (CloseValveResponse) {}
+}
+
+message GetStatusRequest {}
+
+message GetStatusResponse {
+    ValveStatus Status = 1;
+}
+
+enum ValveStatus {
+    VALVE_UNSPECIFIED = 0;
+    VALVE_INVALID = 1;
+    VALVE_OPENING = 2;
+    VALVE_OPEN = 3;
+    VALVE_CLOSING = 4;
+    VALVE_CLOSE = 5;
+}
+
+message OpenValveRequest {}
+
+message OpenValveResponse {}
+
+message CloseValveRequest {}
+
+message CloseValveResponse {}
