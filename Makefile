@@ -7,7 +7,11 @@ valve: proto/valve.proto
 		valve.proto
 
 .PHONY: pinctl
-
 pinctl:
-	mkdir -p bin/pinctl/
+	@mkdir -p bin/pinctl/
 	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/pinctl/pinctl cmd/pinctl/main.go
+
+.PHONY: valvectl
+valvectl:
+	@mkdir -p bin/valvectl
+	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvectl/valvectl cmd/valvectl/main.go
