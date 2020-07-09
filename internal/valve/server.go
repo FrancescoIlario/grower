@@ -23,9 +23,11 @@ func (v *valveServer) GetStatus(context.Context, *valvepb.GetStatusRequest) (*va
 	return &valvepb.GetStatusResponse{Status: statuspb}, nil
 }
 func (v *valveServer) OpenValve(context.Context, *valvepb.OpenValveRequest) (*valvepb.OpenValveResponse, error) {
+	v.Cmder.Open()
 	return &valvepb.OpenValveResponse{}, nil
 }
 
 func (v *valveServer) CloseValve(context.Context, *valvepb.CloseValveRequest) (*valvepb.CloseValveResponse, error) {
+	v.Cmder.Close()
 	return &valvepb.CloseValveResponse{}, nil
 }
