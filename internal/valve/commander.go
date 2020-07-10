@@ -33,11 +33,11 @@ func (c *commander) Status() Status {
 	pv := c.positiveRelayPin.Read()
 	nv := c.negativeRelayPin.Read()
 
-	if pv == rpio.High && nv == rpio.High {
+	if pv == rpio.High && nv == rpio.Low {
 		return StatusOpening
-	} else if pv == rpio.High && nv == rpio.Low {
+	} else if pv == rpio.High && nv == rpio.High {
 		return StatusOpen
-	} else if pv == rpio.Low && nv == rpio.Low {
+	} else if pv == rpio.Low && nv == rpio.High {
 		return StatusClosing
 	} else {
 		return StatusClose
@@ -47,17 +47,17 @@ func (c *commander) Status() Status {
 // Open opens the valve
 // puts tension HIGH to both terminals activating the relays
 func (c *commander) Open() {
-	c.setLinesValues(rpio.High, rpio.High)
-	time.Sleep(c.pulselength * time.Millisecond)
 	c.setLinesValues(rpio.High, rpio.Low)
+	time.Sleep(c.pulselength)
+	c.setLinesValues(rpio.High, rpio.High)
 }
 
 // Close closes the valve
 // puts tension LOW to both terminals shutting the relays
 func (c *commander) Close() {
-	c.setLinesValues(rpio.Low, rpio.Low)
-	time.Sleep(c.pulselength * time.Millisecond)
 	c.setLinesValues(rpio.Low, rpio.High)
+	time.Sleep(c.pulselength)
+	c.setLinesValues(rpio.Low, rpio.Low)
 }
 
 func (c *commander) setLinesValues(p, n rpio.State) {
