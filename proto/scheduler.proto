@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package schedulerpb;
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/FrancescoIlario/usplay/pkg/schedulerpb";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "github.com/mwitkow/go-proto-validators/validator.proto";
+
+service ScheduleService {
+  rpc ListSchedules(ListSchedulesRequest) returns (ListSchedulesResponse) {}
+
+  rpc GetSchedule(GetScheduleRequest) returns (Schedule) {}
+
+  rpc CreateSchedule(CreateScheduleRequest) returns (Schedule) {}
+
+  rpc UpdateSchedule(UpdateScheduleRequest) returns (Schedule) {}
+
+  rpc DeleteSchedule(DeleteScheduleRequest) returns (google.protobuf.Empty) {}
+}
+
+message ListSchedulesRequest {}
+
+message ListSchedulesResponse {
+  repeated Schedule Schedules = 1;
+}
+
+message GetScheduleRequest {
+  // The resource id  of the Schedule to be returned.
+  string id = 1;
+}
+
+message CreateScheduleRequest {
+  TimePoint OpenTime = 1;
+  TimePoint CloseTime = 2;
+}
+
+message UpdateScheduleRequest {
+  // The Schedule resource which replaces the resource on the server.
+  Schedule Schedule = 1;
+}
+
+message DeleteScheduleRequest {
+  // The resource id  of the Schedule to be deleted.
+  string id = 1;
+}
+
+message Schedule { 
+  string id = 1;
+  google.protobuf.Timestamp CreationTime = 2;
+  TimePoint OpenTime = 3;
+  TimePoint CloseTime = 4;
+}
+
+message TimePoint {
+  int32 hours = 1 [(validator.field) = {int_gt: -1, int_lt: 24, msg_exists: true}];
+  int32 minutes = 2 [(validator.field) = {int_gt: -1, int_lt: 60, msg_exists: true}];
+}
