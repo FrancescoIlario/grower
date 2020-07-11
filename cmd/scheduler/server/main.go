@@ -6,6 +6,7 @@ import (
 
 	"github.com/FrancescoIlario/grower/cmd/scheduler/server/conf"
 	"github.com/FrancescoIlario/grower/internal/scheduler"
+	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -30,7 +31,8 @@ func startServer(config conf.Configuration) {
 	}
 	logrus.Debugf("acquired conf.Address %v", config.Address)
 
-	grpcServer, schedSvr := grpc.NewServer(), scheduler.NewServer()
+	schedSvr := scheduler.NewServer(config.ValveCmdrHost, memstore.New())
+	grpcServer := grpc.NewServer()
 	schedulerpb.RegisterScheduleServiceServer(grpcServer, schedSvr)
 
 	logrus.Debugf("starting server at %v", config.Address)
