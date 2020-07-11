@@ -1,14 +1,20 @@
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
+# github.com/gogo/protobuf v1.3.0
+github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 # github.com/golang/protobuf v1.4.2
 ## explicit
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/ptypes
 github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/duration
+github.com/golang/protobuf/ptypes/empty
 github.com/golang/protobuf/ptypes/timestamp
 # github.com/golang/snappy v0.0.1
 github.com/golang/snappy
+# github.com/google/protobuf v3.12.3+incompatible
+## explicit
 # github.com/google/uuid v1.1.1
 ## explicit
 github.com/google/uuid
@@ -26,25 +32,26 @@ github.com/klauspost/compress/zstd
 github.com/klauspost/compress/zstd/internal/xxhash
 # github.com/konsorten/go-windows-terminal-sequences v1.0.3
 github.com/konsorten/go-windows-terminal-sequences
+# github.com/mwitkow/go-proto-validators v0.3.0
+## explicit
+github.com/mwitkow/go-proto-validators
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
+# github.com/robfig/cron/v3 v3.0.0
+## explicit
+github.com/robfig/cron/v3
 # github.com/sirupsen/logrus v1.6.0
 ## explicit
 github.com/sirupsen/logrus
 # github.com/spf13/cobra v1.0.0
 ## explicit
 github.com/spf13/cobra
-# github.com/spf13/pflag v1.0.5
+# github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
 # github.com/stianeikeland/go-rpio/v4 v4.4.0
 ## explicit
 github.com/stianeikeland/go-rpio/v4
-# github.com/warthog618/gpiod v0.4.0
-## explicit
-github.com/warthog618/gpiod
-github.com/warthog618/gpiod/device/rpi
-github.com/warthog618/gpiod/uapi
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
 # github.com/xdg/stringprep v0.0.0-20180714160509-73f8eece6fdc
@@ -180,4 +187,5 @@ google.golang.org/protobuf/runtime/protoiface
 google.golang.org/protobuf/runtime/protoimpl
 google.golang.org/protobuf/types/known/anypb
 google.golang.org/protobuf/types/known/durationpb
+google.golang.org/protobuf/types/known/emptypb
 google.golang.org/protobuf/types/known/timestamppb
