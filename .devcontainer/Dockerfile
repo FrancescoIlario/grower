@@ -53,7 +53,9 @@ RUN apt-get update \
         github.com/zmb3/gogetdoc@latest \
         github.com/fatih/gomodifytags@latest  \
         github.com/mgechev/revive@latest  \
-        github.com/go-delve/delve/cmd/dlv@latest 2>&1 \
+        github.com/go-delve/delve/cmd/dlv@latest \
+        github.com/mwitkow/go-proto-validators \
+        github.com/google/protobuf 2>&1 \
     #
     # Install Go tools w/o module support
     && go get -v github.com/alecthomas/gometalinter 2>&1 \
