@@ -16,8 +16,6 @@ service ScheduleService {
 
   rpc CreateSchedule(CreateScheduleRequest) returns (Schedule) {}
 
-  rpc UpdateSchedule(UpdateScheduleRequest) returns (Schedule) {}
-
   rpc DeleteSchedule(DeleteScheduleRequest) returns (google.protobuf.Empty) {}
 }
 
