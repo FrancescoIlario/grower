@@ -41,8 +41,8 @@ func NewServer(valveCmdrHost string, store PairStore) schedulerpb.ScheduleServic
 	}
 }
 
-func (s *server) ListSchedules(context.Context, *schedulerpb.ListSchedulesRequest) (*schedulerpb.ListSchedulesResponse, error) {
-	pp, err := s.store.List()
+func (s *server) ListSchedules(ctx context.Context, _ *schedulerpb.ListSchedulesRequest) (*schedulerpb.ListSchedulesResponse, error) {
+	pp, err := s.store.List(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("error reading list of stored pairs: %v", err))
 	}
@@ -59,7 +59,7 @@ func (s *server) GetSchedule(ctx context.Context, gsr *schedulerpb.GetScheduleRe
 	if err != nil {
 		return nil, status.Errorf(codes.InvalidArgument, "id %s is not a valid UUID: %v", gsr.Id, err)
 	}
-	p, err := s.store.Read(uid)
+	p, err := s.store.Read(ctx, uid)
 	if err != nil {
 		switch err {
 		case ErrNotFound:
@@ -98,7 +98,7 @@ func (s *server) CreateSchedule(ctx context.Context, req *schedulerpb.CreateSche
 		CreationTime: time.Now(),
 	}
 
-	id, err := s.store.Store(p)
+	id, err := s.store.Store(ctx, p)
 	if err != nil {
 		s.cc.Remove(ctentry)
 		s.cc.Remove(otentry)
@@ -120,7 +120,7 @@ func (s *server) DeleteSchedule(ctx context.Context, dsr *schedulerpb.DeleteSche
 		return nil, status.Errorf(codes.InvalidArgument, "id %s is not a valid UUID: %v", dsr.Id, err)
 	}
 
-	if _, err := s.store.Delete(uid); err != nil {
+	if err := s.store.Delete(ctx, uid); err != nil {
 		switch err {
 		case ErrNotFound:
 			return nil, status.Errorf(codes.NotFound, "id %s not found", dsr.Id)

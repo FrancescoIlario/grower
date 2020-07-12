@@ -1,6 +1,7 @@
 package memstore
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/FrancescoIlario/grower/internal/scheduler"
@@ -16,7 +17,7 @@ type memstore struct {
 	pairs map[uuid.UUID]scheduler.Pair
 }
 
-func (m *memstore) Store(p scheduler.Pair) (*uuid.UUID, error) {
+func (m *memstore) Store(_ context.Context, p scheduler.Pair) (*uuid.UUID, error) {
 	id, err := uuid.NewUUID()
 	if err != nil {
 		return nil, fmt.Errorf("error creating a new uuid: %w", err)
@@ -26,14 +27,14 @@ func (m *memstore) Store(p scheduler.Pair) (*uuid.UUID, error) {
 	return &id, nil
 }
 
-func (m *memstore) Read(id uuid.UUID) (*scheduler.Pair, error) {
+func (m *memstore) Read(_ context.Context, id uuid.UUID) (*scheduler.Pair, error) {
 	if p, ok := m.pairs[id]; ok {
 		return &p, nil
 	}
 	return nil, scheduler.ErrNotFound
 }
 
-func (m *memstore) List() ([]scheduler.Pair, error) {
+func (m *memstore) List(_ context.Context) ([]scheduler.Pair, error) {
 	// make a copy for security
 	pairs := make([]scheduler.Pair, len(m.pairs))
 	i := 0
@@ -45,11 +46,11 @@ func (m *memstore) List() ([]scheduler.Pair, error) {
 	return pairs, nil
 }
 
-func (m *memstore) Delete(id uuid.UUID) (*scheduler.Pair, error) {
-	if p, ok := m.pairs[id]; ok {
+func (m *memstore) Delete(_ context.Context, id uuid.UUID) error {
+	if _, ok := m.pairs[id]; ok {
 		delete(m.pairs, id)
-		return &p, nil
+		return nil
 	}
 
-	return nil, scheduler.ErrNotFound
+	return scheduler.ErrNotFound
 }

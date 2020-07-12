@@ -1,6 +1,7 @@
 package scheduler
 
 import (
+	"context"
 	"fmt"
 	"time"
 
@@ -12,28 +13,28 @@ import (
 
 // PairStore ...
 type PairStore interface {
-	Store(Pair) (*uuid.UUID, error)
-	Read(uuid.UUID) (*Pair, error)
-	List() ([]Pair, error)
-	Delete(uuid.UUID) (*Pair, error)
+	Store(context.Context, Pair) (*uuid.UUID, error)
+	Read(context.Context, uuid.UUID) (*Pair, error)
+	List(context.Context) ([]Pair, error)
+	Delete(context.Context, uuid.UUID) error
 }
 
 // Pair ...
 type Pair struct {
-	ID           uuid.UUID
-	OpenEntryID  cron.EntryID
-	OpenSpec     string
-	OpenTime     TimePoint
-	CloseEntryID cron.EntryID
-	CloseSpec    string
-	CloseTime    TimePoint
-	CreationTime time.Time
+	ID           uuid.UUID    `bson:"_id" json:"_id"`
+	OpenEntryID  cron.EntryID `bson:"open_entry_id" json:"open_entry_id"`
+	OpenSpec     string       `bson:"open_spec" json:"open_spec"`
+	OpenTime     TimePoint    `bson:"open_time" json:"open_time"`
+	CloseEntryID cron.EntryID `bson:"close_entry_id" json:"close_entry_id"`
+	CloseSpec    string       `bson:"close_spec" json:"close_spec"`
+	CloseTime    TimePoint    `bson:"close_time" json:"close_time"`
+	CreationTime time.Time    `bson:"creation_time" json:"creation_time"`
 }
 
 //TimePoint ...
 type TimePoint struct {
-	Hours   int
-	Minutes int
+	Hours   int `bson:"hours" json:"hours"`
+	Minutes int `bson:"minutes" json:"minutes"`
 }
 
 func (p *Pair) toSchedule() *schedulerpb.Schedule {
