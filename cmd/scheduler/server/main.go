@@ -8,6 +8,7 @@ import (
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
+	"github.com/FrancescoIlario/grower/pkg/valvepb"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
@@ -31,7 +32,12 @@ func startServer(config conf.Configuration) {
 	}
 	logrus.Debugf("acquired conf.Address %v", config.Address)
 
-	schedSvr := scheduler.NewServer(config.ValveCmdrHost, memstore.New())
+	conn, err := grpc.Dial(config.ValveCmdrHost, grpc.WithInsecure())
+	if err != nil {
+		logrus.Fatalf("unable to connect to ValveCmdr at %v", config.ValveCmdrHost)
+	}
+
+	schedSvr := scheduler.NewServer(memstore.New(), valvepb.NewValveServiceClient(conn))
 	grpcServer := grpc.NewServer()
 	schedulerpb.RegisterScheduleServiceServer(grpcServer, schedSvr)
 

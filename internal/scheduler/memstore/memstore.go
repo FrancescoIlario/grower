@@ -10,7 +10,9 @@ import (
 
 // New ...
 func New() scheduler.PairStore {
-	return &memstore{}
+	return &memstore{
+		pairs: make(map[uuid.UUID]scheduler.Pair),
+	}
 }
 
 type memstore struct {
@@ -22,7 +24,7 @@ func (m *memstore) Store(_ context.Context, p scheduler.Pair) (*uuid.UUID, error
 	if err != nil {
 		return nil, fmt.Errorf("error creating a new uuid: %w", err)
 	}
-
+	p.ID = id
 	m.pairs[id] = p
 	return &id, nil
 }

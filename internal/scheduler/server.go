@@ -12,7 +12,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/robfig/cron/v3"
 	"github.com/sirupsen/logrus"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -26,16 +25,10 @@ type server struct {
 }
 
 // NewServer ...
-func NewServer(valveCmdrHost string, store PairStore) schedulerpb.ScheduleServiceServer {
-	conn, err := grpc.Dial(valveCmdrHost, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		logrus.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
-
+func NewServer(store PairStore, vsvc valvepb.ValveServiceClient) schedulerpb.ScheduleServiceServer {
 	return &server{
 		cc:     cron.New(),
-		client: valvepb.NewValveServiceClient(conn),
+		client: vsvc,
 		mctx:   context.Background(),
 		store:  store,
 	}
@@ -95,6 +88,14 @@ func (s *server) CreateSchedule(ctx context.Context, req *schedulerpb.CreateSche
 		OpenSpec:     ospec,
 		CloseEntryID: ctentry,
 		CloseSpec:    cspec,
+		CloseTime: TimePoint{
+			Hours:   int(req.GetCloseTime().GetHours()),
+			Minutes: int(req.GetCloseTime().GetMinutes()),
+		},
+		OpenTime: TimePoint{
+			Hours:   int(req.GetOpenTime().GetHours()),
+			Minutes: int(req.GetOpenTime().GetMinutes()),
+		},
 		CreationTime: time.Now(),
 	}
 
