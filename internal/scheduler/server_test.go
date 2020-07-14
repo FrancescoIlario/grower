@@ -57,21 +57,10 @@ func arrange(ctx context.Context, t *testing.T) {
 func Test_CreateSchedule(t *testing.T) {
 	ctx := context.Background()
 	arrange(ctx, t)
-	// defer lis.Close()
-	// defer conn.Close()
 
 	client := schedulerpb.NewScheduleServiceClient(conn)
-	csr := schedulerpb.CreateScheduleRequest{
-		CloseTime: &schedulerpb.TimePoint{
-			Hours:   20,
-			Minutes: 20,
-		},
-		OpenTime: &schedulerpb.TimePoint{
-			Hours:   20,
-			Minutes: 15,
-		},
-	}
-	resp, err := client.CreateSchedule(ctx, &csr)
+	csr := validCreateScheduleRequest()
+	resp, err := client.CreateSchedule(ctx, csr)
 	if err != nil {
 		t.Fatalf("Create schedule failed: %v", err)
 	}
@@ -105,7 +94,115 @@ func Test_CreateSchedule(t *testing.T) {
 	if exp, obt := p.OpenTime.Minutes, int(csr.GetOpenTime().Minutes); exp != obt {
 		t.Errorf("open time minutes: expected %d, obtained %d", exp, obt)
 	}
+}
 
-	log.Printf("Response: %+v", resp)
-	// Test for output here.
+func Test_CreateSchedule_invalid_closetime_hour_less_than_0(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.CloseTime.Hours = -1
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_closetime_hour_more_than_23(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.CloseTime.Hours = 24
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_closetime_minutes_less_than_0(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.CloseTime.Minutes = -1
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_closetime_minutes_more_than_59(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.CloseTime.Minutes = 60
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_opentime_hour_less_than_0(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.OpenTime.Hours = -1
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_opentime_hour_more_than_23(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.OpenTime.Hours = 24
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_opentime_minutes_less_than_0(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.OpenTime.Minutes = -1
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func Test_CreateSchedule_invalid_opentime_minutes_more_than_59(t *testing.T) {
+	ctx := context.Background()
+	arrange(ctx, t)
+
+	client := schedulerpb.NewScheduleServiceClient(conn)
+	csr := validCreateScheduleRequest()
+	csr.OpenTime.Minutes = 60
+
+	if resp, err := client.CreateSchedule(ctx, csr); err == nil {
+		t.Fatalf("expected error, obtained response: %+v", resp)
+	}
+}
+
+func validCreateScheduleRequest() *schedulerpb.CreateScheduleRequest {
+	return &schedulerpb.CreateScheduleRequest{
+		OpenTime:  &schedulerpb.TimePoint{Hours: 20, Minutes: 15},
+		CloseTime: &schedulerpb.TimePoint{Hours: 20, Minutes: 20},
+	}
 }
