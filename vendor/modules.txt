@@ -1,6 +1,7 @@
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
-# github.com/gogo/protobuf v1.3.0
+# github.com/gogo/protobuf v1.3.1
+## explicit
 github.com/gogo/protobuf/proto
 github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 # github.com/golang/protobuf v1.4.2
@@ -38,7 +39,7 @@ github.com/mwitkow/go-proto-validators
 # github.com/pkg/errors v0.9.1
 ## explicit
 github.com/pkg/errors
-# github.com/robfig/cron/v3 v3.0.0
+# github.com/robfig/cron/v3 v3.0.1
 ## explicit
 github.com/robfig/cron/v3
 # github.com/sirupsen/logrus v1.6.0
@@ -47,7 +48,8 @@ github.com/sirupsen/logrus
 # github.com/spf13/cobra v1.0.0
 ## explicit
 github.com/spf13/cobra
-# github.com/spf13/pflag v1.0.3
+# github.com/spf13/pflag v1.0.5
+## explicit
 github.com/spf13/pflag
 # github.com/stianeikeland/go-rpio/v4 v4.4.0
 ## explicit
@@ -89,7 +91,7 @@ go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
 go.mongodb.org/mongo-driver/x/mongo/driver/uuid
 go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage
-# golang.org/x/crypto v0.0.0-20200707235045-ab33eee955e0
+# golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
 ## explicit
 golang.org/x/crypto/pbkdf2
 # golang.org/x/net v0.0.0-20200707034311-ab3426394381
@@ -112,7 +114,7 @@ golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-# google.golang.org/genproto v0.0.0-20200709005830-7a2ca40e9dc3
+# google.golang.org/genproto v0.0.0-20200714145754-f631a03bbd91
 ## explicit
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.30.0
