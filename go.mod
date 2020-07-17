@@ -5,7 +5,6 @@ go 1.14
 require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.2
-	github.com/google/protobuf v3.12.3+incompatible // indirect
 	github.com/google/uuid v1.1.1
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/klauspost/compress v1.10.10 // indirect
