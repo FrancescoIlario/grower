@@ -3,6 +3,7 @@ package memstore
 import (
 	"context"
 	"fmt"
+	"reflect"
 
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/google/uuid"
@@ -39,12 +40,13 @@ func (m *memstore) Read(_ context.Context, id uuid.UUID) (*scheduler.Pair, error
 func (m *memstore) List(_ context.Context) ([]scheduler.Pair, error) {
 	// make a copy for security
 	pairs := make([]scheduler.Pair, len(m.pairs))
+	cpairs := make([]scheduler.Pair, len(m.pairs))
 	i := 0
-	for _, p := range m.pairs {
-		pairs[i] = p
+	for _, pair := range m.pairs {
+		cpairs[i] = pair
 		i++
 	}
-
+	reflect.Copy(reflect.ValueOf(pairs), reflect.ValueOf(cpairs))
 	return pairs, nil
 }
 
