@@ -2,7 +2,6 @@ package mongostore
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/google/uuid"
@@ -68,13 +67,13 @@ func NewMongoRepo(conf MongoConfiguration) (scheduler.PairStore, error) {
 }
 
 func (s *mongoStore) Store(ctx context.Context, pair scheduler.Pair) (*uuid.UUID, error) {
-	ir, err := s.Collection.InsertOne(ctx, pair)
+	id, err := uuid.NewUUID()
 	if err != nil {
 		return nil, err
 	}
+	pair.ID = id.String()
 
-	id, err := uuid.Parse(fmt.Sprintf("%d", ir.InsertedID))
-	if err != nil {
+	if _, err := s.Collection.InsertOne(ctx, pair); err != nil {
 		return nil, err
 	}
 

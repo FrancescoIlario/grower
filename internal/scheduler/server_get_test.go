@@ -42,7 +42,7 @@ func arrangeGet(ctx context.Context, t *testing.T) {
 	if err != nil {
 		t.Fatalf("error arranging the test: %v", err)
 	}
-	pairToRead.ID = *id
+	pairToRead.ID = id.String()
 
 	cmder := mocks.NewValveCmder(200 * time.Millisecond)
 	s := grpc.NewServer()
@@ -73,7 +73,7 @@ func Test_GetSchedule(t *testing.T) {
 
 	client := schedulerpb.NewScheduleServiceClient(conn)
 	req := &schedulerpb.GetScheduleRequest{
-		Id: pairToRead.ID.String(),
+		Id: pairToRead.ID,
 	}
 
 	resp, err := client.GetSchedule(ctx, req)

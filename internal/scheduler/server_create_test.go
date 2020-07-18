@@ -71,8 +71,8 @@ func Test_CreateSchedule(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error returned looking for pair with id %s: %v", resp.Id, err)
 	}
-	if p.ID != uid {
-		t.Errorf("expected id %s, obtained %s", uid.String(), p.ID.String())
+	if p.ID != uid.String() {
+		t.Errorf("expected id %s, obtained %s", uid.String(), p.ID)
 	}
 	if exp, obt := p.CloseTime.Hours, int(csr.GetCloseTime().Hours); exp != obt {
 		t.Errorf("close time hours: expected %d, obtained %d", exp, obt)

@@ -21,7 +21,7 @@ type PairStore interface {
 
 // Pair ...
 type Pair struct {
-	ID           uuid.UUID    `bson:"_id" json:"_id"`
+	ID           string       `bson:"_id" json:"_id"`
 	OpenEntryID  cron.EntryID `bson:"open_entry_id" json:"open_entry_id"`
 	OpenSpec     string       `bson:"open_spec" json:"open_spec"`
 	OpenTime     TimePoint    `bson:"open_time" json:"open_time"`
@@ -40,7 +40,7 @@ type TimePoint struct {
 func (p *Pair) toSchedule() *schedulerpb.Schedule {
 	tp, _ := ptypes.TimestampProto(p.CreationTime)
 	return &schedulerpb.Schedule{
-		Id: p.ID.String(),
+		Id: p.ID,
 		OpenTime: &schedulerpb.TimePoint{
 			Hours:   int32(p.OpenTime.Hours),
 			Minutes: int32(p.OpenTime.Minutes),

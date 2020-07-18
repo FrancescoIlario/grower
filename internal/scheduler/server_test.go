@@ -39,7 +39,7 @@ func checkPairs(t *testing.T, expected *scheduler.Pair, obtained *schedulerpb.Sc
 		t.Errorf("Close time Minutes expected %v, obtained %v", exp, obt)
 	}
 
-	if exp, obt := expected.ID.String(), obtained.Id; exp != obt {
+	if exp, obt := expected.ID, obtained.Id; exp != obt {
 		t.Errorf("Close time Minutes expected %v, obtained %v", exp, obt)
 	}
 	if exp, obt := expected.CreationTime, obtained.CreationTime.AsTime(); exp.Nanosecond() != obt.Nanosecond() {

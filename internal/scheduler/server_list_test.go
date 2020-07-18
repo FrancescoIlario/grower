@@ -60,7 +60,7 @@ func arrangeList(ctx context.Context, t *testing.T) {
 		if err != nil {
 			t.Fatalf("error arranging the test: %v", err)
 		}
-		pair.ID = *id
+		pair.ID = id.String()
 	}
 
 	cmder := mocks.NewValveCmder(200 * time.Millisecond)
@@ -111,7 +111,7 @@ func Test_ListSchedules(t *testing.T) {
 
 func getPairToRead(t *testing.T, id string) *scheduler.Pair {
 	for _, pair := range pairsToRead {
-		if idstr := pair.ID.String(); idstr == id {
+		if idstr := pair.ID; idstr == id {
 			return pair
 		}
 	}

@@ -14,12 +14,14 @@ import (
 	"github.com/FrancescoIlario/grower/internal/valve"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
 	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
 )
 
 var (
-	pairToDelete = scheduler.Pair{
+	pairToDeleteID *uuid.UUID
+	pairToDelete   = scheduler.Pair{
 		CreationTime: time.Now(),
 		OpenEntryID:  10,
 		CloseEntryID: 11,
@@ -42,7 +44,8 @@ func arrangeDelete(ctx context.Context, t *testing.T) {
 	if err != nil {
 		t.Fatalf("error arranging the test: %v", err)
 	}
-	pairToDelete.ID = *id
+	pairToDeleteID = id
+	pairToDelete.ID = id.String()
 
 	cmder := mocks.NewValveCmder(200 * time.Millisecond)
 	s := grpc.NewServer()
@@ -72,13 +75,13 @@ func Test_DeleteSchedule(t *testing.T) {
 	arrangeDelete(ctx, t)
 
 	client := schedulerpb.NewScheduleServiceClient(conn)
-	req := &schedulerpb.DeleteScheduleRequest{Id: pairToDelete.ID.String()}
+	req := &schedulerpb.DeleteScheduleRequest{Id: pairToDelete.ID}
 
 	if _, err := client.DeleteSchedule(ctx, req); err != nil {
 		t.Fatalf("error deleting schedule: %+v", err)
 	}
 
-	_, err := store.Read(ctx, pairToDelete.ID)
+	_, err := store.Read(ctx, *pairToDeleteID)
 	if err == nil || err != scheduler.ErrNotFound {
 		t.Fatalf("expected ErrNotFound, obtained %v", err)
 	}
