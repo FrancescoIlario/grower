@@ -53,6 +53,9 @@ schedulersvr: bindir
 schedulerctl: bindir
 	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/schedulerctl cmd/scheduler/client/main.go
 
-.PHONY: utest
+.PHONY: utest scheduler-itest
 utest:
 	go run ./... -short
+
+scheduler-itest:
+	eval integration/scheduler/mongostore/runtest.sh

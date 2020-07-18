@@ -10,4 +10,7 @@ function main() {
     return $res
 }
 
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+pushd $SCRIPTPATH > /dev/null
 main
+popd > /dev/null
