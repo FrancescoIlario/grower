@@ -25,9 +25,6 @@ services:
      - SYS_PTRACE
     security_opt:
       - seccomp:unconfined
-    
-    networks:
-      qm: {}
 
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity 
@@ -40,6 +37,3 @@ volumes:
   vscode_insider_extension:
     external:
       name: "vscode_insiders_extension_go"
-    
-networks: 
-  qm: {}
