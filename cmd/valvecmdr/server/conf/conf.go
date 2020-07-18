@@ -9,9 +9,9 @@ import (
 // EnvPrefix prefix for environmental variables parsed by application
 const EnvPrefix = "VCMDSVR"
 
-// Configuration Bookmaster service configuration
+// Configuration ValveCmdr service configuration
 type Configuration struct {
-	Address     string        `default:"localhost:8080"`
+	Address     string        `default:"localhost:24100"`
 	PositivePin uint8         `default:"10" split_words:"true"`
 	NegativePin uint8         `default:"4" split_words:"true"`
 	PulseLength time.Duration `default:"20ms" split_words:"true"`
