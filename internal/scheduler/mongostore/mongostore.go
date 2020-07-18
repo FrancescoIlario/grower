@@ -100,9 +100,10 @@ func (s *mongoStore) List(ctx context.Context) ([]scheduler.Pair, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer c.Close(ctx)
 
 	var res []scheduler.Pair
-	if err := c.Decode(&res); err != nil {
+	if err := c.All(ctx, &res); err != nil {
 		return nil, err
 	}
 	return res, nil

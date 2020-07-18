@@ -28,6 +28,57 @@ func TestCreateGet_Integration(t *testing.T) {
 	checkPairs(t, pairToCreate, pairRead)
 }
 
+func TestCreateList_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+	}
+	ctx := context.TODO()
+	store, pairToCreate := generateNewStoreOrFatal(t), getPairToCreate()
+	uid, err := store.Store(ctx, *pairToCreate)
+	if err != nil {
+		t.Fatalf("error storing pair: %v", err)
+	}
+	pairToCreate.ID = uid.String()
+
+	pairsRead, err := store.List(ctx)
+	if err != nil {
+		t.Fatalf("error reading pair: %v", err)
+	}
+	if lpr := len(pairsRead); lpr != 1 {
+		t.Fatalf("expected 1 pairs, obtained %v", lpr)
+	}
+
+	checkPairs(t, pairToCreate, &pairsRead[0])
+}
+
+func TestCreateDelete_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping integration test")
+	}
+	ctx := context.TODO()
+	store, pairToCreate := generateNewStoreOrFatal(t), getPairToCreate()
+	uid, err := store.Store(ctx, *pairToCreate)
+	if err != nil {
+		t.Fatalf("error storing pair: %v", err)
+	}
+	pairToCreate.ID = uid.String()
+
+	pairRead, err := store.Read(ctx, *uid)
+	if err != nil {
+		t.Fatalf("error reading pair: %v", err)
+	}
+
+	checkPairs(t, pairToCreate, pairRead)
+
+	if err := store.Delete(ctx, *uid); err != nil {
+		t.Fatalf("error deleting pair: %v", err)
+	}
+
+	if _, err := store.Read(ctx, *uid); err == nil {
+		t.Fatalf("expected error after deletion not returned")
+	}
+}
+
 func getPairToCreate() *scheduler.Pair {
 	return &scheduler.Pair{
 		OpenEntryID:  10,

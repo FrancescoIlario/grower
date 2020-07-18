@@ -9,6 +9,10 @@ import (
 	"github.com/google/uuid"
 )
 
+// TODO: current integration tests are not implement
+// in the best way, but it's the easier and agilest one
+// for the moment I could came up! :)
+
 var (
 	mongoConnStr string
 	mongoDb      string
