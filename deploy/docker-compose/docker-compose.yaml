@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  valvecmder:
+    build: 
+      context: ../../
+      dockerfile: build/docker/valvecmder/server/Dockerfile
+    environment: 
+      SCHEDULER_VALVE_CMDR_HOST: valvecmder
+      SCHEDULER_ADDRESS: localhost:8080
+      SCHEDULER_POSITIVE_PIN: 10
+      SCHEDULER_NEGATIVE_PIN: 4
+      SCHEDULER_PULSE_LENGTH: 20ms
+  scheduler:
+    build: 
+      context: ../../
+      dockerfile: build/docker/scheduler/server/Dockerfile
+    environment: 
+      SCHEDULER_VALVE_CMDR_HOST: valvecmder
+      SCHEDULER_ADDRESS: localhost:8080
