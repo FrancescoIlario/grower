@@ -39,6 +39,10 @@ pinctl: bindir
 valvectl: bindir
 	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvectl cmd/valvectl/main.go
 
+.PHONY: shutter
+shutter: bindir
+	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/shutter cmd/shutter/main.go
+
 .PHONY: valvecmdrsvr valvecmdrctl
 valvecmdrsvr: bindir
 	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvecmdsvr cmd/valvecmdr/server/main.go
