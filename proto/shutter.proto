@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package shutterpb;
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/FrancescoIlario/grower/pkg/shutterpb";
+
+import "google/protobuf/empty.proto";
+
+service ShutterService {
+  rpc Shut(ShutRequest) returns (google.protobuf.Empty) {}
+}
+
+message ShutRequest {}
