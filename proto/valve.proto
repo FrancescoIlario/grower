@@ -3,7 +3,7 @@ syntax = "proto3";
 package valvepb;
 
 option optimize_for = LITE_RUNTIME;
-option go_package = "github.com/FrancescoIlario/usplay/pkg/valvepb";
+option go_package = "github.com/FrancescoIlario/grower/pkg/valvepb";
 
 service ValveService {
   rpc GetStatus(GetStatusRequest) returns (GetStatusResponse) {}
