@@ -3,7 +3,7 @@ syntax = "proto3";
 package schedulerpb;
 
 option optimize_for = LITE_RUNTIME;
-option go_package = "github.com/FrancescoIlario/usplay/pkg/schedulerpb";
+option go_package = "github.com/FrancescoIlario/grower/pkg/schedulerpb";
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
