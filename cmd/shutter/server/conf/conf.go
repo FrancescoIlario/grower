@@ -9,8 +9,8 @@ const EnvPrefix = "SHUTTER"
 
 // Configuration service configuration
 type Configuration struct {
-	InputPin  uint `default:"17"`
-	OutputPin uint `default:"27"`
+	Address   string `default:"localhost:24102"`
+	OutputPin uint   `default:"27"`
 }
 
 // GetConfigurationFromEnv ...
