@@ -24,7 +24,7 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&address, "host", "a", "localhost:24103", "address where server is published")
+	rootCmd.PersistentFlags().StringVarP(&address, "host", "a", "localhost:24102", "address where server is published")
 	rootCmd.AddCommand(shutCmd)
 }
 

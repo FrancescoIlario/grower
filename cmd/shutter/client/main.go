@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/FrancescoIlario/grower/cmd/scheduler/client/cmd"
+	"github.com/FrancescoIlario/grower/cmd/shutter/client/cmd"
 	"github.com/sirupsen/logrus"
 )
 
