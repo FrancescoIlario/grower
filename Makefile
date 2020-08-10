@@ -1,5 +1,5 @@
 .PHONY: protos valvepb schedulerpb
-protos: valvepb schedulerpb
+protos: valvepb schedulerpb shutterpb
 
 valvepb: proto/valve.proto
 	mkdir -p pkg/valvepb
@@ -21,6 +21,19 @@ schedulerpb: proto/scheduler.proto
 		--govalidators_opt=paths=source_relative \
 		--go_opt=paths=source_relative \
 		scheduler.proto
+
+shutterpb: proto/shutter.proto
+	mkdir -p pkg/shutterpb
+
+	protoc  \
+		--proto_path=${GOPATH}/src \
+		--proto_path=${GOPATH}/src/github.com/google/protobuf/src \
+		--proto_path=proto \
+		--go_out=plugins=grpc:pkg/shutterpb \
+		--govalidators_out=pkg/shutterpb \
+		--govalidators_opt=paths=source_relative \
+		--go_opt=paths=source_relative \
+		shutter.proto
 
 .PHONY: all init
 all: pinctl valvectl valvecmdrctl valvecmdrsvr scheduler
