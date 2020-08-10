@@ -10,6 +10,7 @@ services:
       SCHEDULER_POSITIVE_PIN: 10
       SCHEDULER_NEGATIVE_PIN: 4
       SCHEDULER_PULSE_LENGTH: 20ms
+
   scheduler:
     build: 
       context: ../../
@@ -17,3 +18,11 @@ services:
     environment: 
       SCHEDULER_VALVE_CMDR_HOST: valvecmder
       SCHEDULER_ADDRESS: localhost:8080
+  
+  shutter:
+    build:
+      context: ../../
+      dockerfile: build/docker/shutter/server/Dockerfile
+    environment:
+      SHUTTER_ADDRESS: localhost:8080
+      SHUTTER_OUTPUT_PIN: 27
