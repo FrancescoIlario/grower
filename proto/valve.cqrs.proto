@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package cqrs;
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/FrancescoIlario/grower/pkg/valvepb/cqrs";
+
+import "google/protobuf/timestamp.proto";
+
+message OpenValveCommand {
+  string Id = 1;
+  google.protobuf.Timestamp CreationTime = 2;
+}
+
+message OpenValveCommandResponse {}
+
+message CloseValveCommand {
+  string Id = 1;
+  google.protobuf.Timestamp CreationTime = 2;
+}
+
+message CloseValveCommandResponse {}
+
+message GetStatusQuery {}
+
+message GetStatusResponse {
+  
+}

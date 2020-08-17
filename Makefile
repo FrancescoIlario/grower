@@ -1,13 +1,37 @@
 .PHONY: protos valvepb schedulerpb
-protos: valvepb schedulerpb shutterpb
+protos: valvepb schedulerpb shutterpb valveespb valvecqrspb valvesharedpb
 
-valvepb: proto/valve.proto
-	mkdir -p pkg/valvepb
+valvepb: proto/valve.grpc.proto valvesharedpb
+	mkdir -p pkg/valvepb/grpc
 	protoc \
 		-I proto \
-		--go_out=plugins=grpc:pkg/valvepb \
+		--go_out=plugins=grpc:pkg/valvepb/grpc \
 		--go_opt=paths=source_relative \
-		valve.proto
+		valve.grpc.proto
+
+valveespb: proto/valve.es.proto valvesharedpb
+	mkdir -p pkg/valvepb/es
+	protoc \
+		-I proto \
+		--go_out=plugins=grpc:pkg/valvepb/es \
+		--go_opt=paths=source_relative \
+		valve.es.proto
+
+valvecqrspb: proto/valve.cqrs.proto valvesharedpb
+	mkdir -p pkg/valvepb/cqrs
+	protoc \
+		-I proto \
+		--go_out=plugins=grpc:pkg/valvepb/cqrs \
+		--go_opt=paths=source_relative \
+		valve.cqrs.proto
+
+valvesharedpb: proto/valve.shared.proto
+	mkdir -p pkg/valvepb/shared
+	protoc \
+		-I proto \
+		--go_out=plugins=grpc:pkg/valvepb/shared \
+		--go_opt=paths=source_relative \
+		valve.shared.proto
 
 schedulerpb: proto/scheduler.proto
 	mkdir -p pkg/schedulerpb
@@ -58,10 +82,10 @@ shutter: bindir
 
 .PHONY: valvecmdrsvr valvecmdrctl
 valvecmdrsvr: bindir
-	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvecmdsvr cmd/valvecmdr/server/main.go
+	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvecmdsvr cmd/valvegrpc/server/main.go
 
 valvecmdrctl: bindir
-	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvecmdctl cmd/valvecmdr/client/main.go
+	env GOOS=linux GOARCH=arm GOARM=6 go build -o bin/valvecmdctl cmd/valvegrpc/client/main.go
 
 .PHONY: schedulersvr schedulerctl
 schedulersvr: bindir

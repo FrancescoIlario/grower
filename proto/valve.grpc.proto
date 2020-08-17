@@ -1,9 +1,11 @@
 syntax = "proto3";
 
-package valvepb;
+package grpc;
 
 option optimize_for = LITE_RUNTIME;
-option go_package = "github.com/FrancescoIlario/grower/pkg/valvepb";
+option go_package = "github.com/FrancescoIlario/grower/pkg/valvepb/grpc";
+
+import "valve.shared.proto";
 
 service ValveService {
   rpc GetStatus(GetStatusRequest) returns (GetStatusResponse) {}
@@ -14,16 +16,7 @@ service ValveService {
 message GetStatusRequest {}
 
 message GetStatusResponse {
-    ValveStatus Status = 1;
-}
-
-enum ValveStatus {
-    VALVE_UNSPECIFIED = 0;
-    VALVE_INVALID = 1;
-    VALVE_OPENING = 2;
-    VALVE_OPEN = 3;
-    VALVE_CLOSING = 4;
-    VALVE_CLOSE = 5;
+    shared.ValveStatus Status = 1;
 }
 
 message OpenValveRequest {}

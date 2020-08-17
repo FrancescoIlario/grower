@@ -2,12 +2,13 @@
 // versions:
 // 	protoc-gen-go v1.25.0-devel
 // 	protoc        v3.6.1
-// source: valve.proto
+// source: valve.grpc.proto
 
-package valvepb
+package grpc
 
 import (
 	context "context"
+	shared "github.com/FrancescoIlario/grower/pkg/valvepb/shared"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -29,64 +30,6 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-type ValveStatus int32
-
-const (
-	ValveStatus_VALVE_UNSPECIFIED ValveStatus = 0
-	ValveStatus_VALVE_INVALID     ValveStatus = 1
-	ValveStatus_VALVE_OPENING     ValveStatus = 2
-	ValveStatus_VALVE_OPEN        ValveStatus = 3
-	ValveStatus_VALVE_CLOSING     ValveStatus = 4
-	ValveStatus_VALVE_CLOSE       ValveStatus = 5
-)
-
-// Enum value maps for ValveStatus.
-var (
-	ValveStatus_name = map[int32]string{
-		0: "VALVE_UNSPECIFIED",
-		1: "VALVE_INVALID",
-		2: "VALVE_OPENING",
-		3: "VALVE_OPEN",
-		4: "VALVE_CLOSING",
-		5: "VALVE_CLOSE",
-	}
-	ValveStatus_value = map[string]int32{
-		"VALVE_UNSPECIFIED": 0,
-		"VALVE_INVALID":     1,
-		"VALVE_OPENING":     2,
-		"VALVE_OPEN":        3,
-		"VALVE_CLOSING":     4,
-		"VALVE_CLOSE":       5,
-	}
-)
-
-func (x ValveStatus) Enum() *ValveStatus {
-	p := new(ValveStatus)
-	*p = x
-	return p
-}
-
-func (x ValveStatus) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ValveStatus) Descriptor() protoreflect.EnumDescriptor {
-	return file_valve_proto_enumTypes[0].Descriptor()
-}
-
-func (ValveStatus) Type() protoreflect.EnumType {
-	return &file_valve_proto_enumTypes[0]
-}
-
-func (x ValveStatus) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ValveStatus.Descriptor instead.
-func (ValveStatus) EnumDescriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{0}
-}
-
 type GetStatusRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -96,7 +39,7 @@ type GetStatusRequest struct {
 func (x *GetStatusRequest) Reset() {
 	*x = GetStatusRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[0]
+		mi := &file_valve_grpc_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -109,7 +52,7 @@ func (x *GetStatusRequest) String() string {
 func (*GetStatusRequest) ProtoMessage() {}
 
 func (x *GetStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[0]
+	mi := &file_valve_grpc_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -122,7 +65,7 @@ func (x *GetStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetStatusRequest) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{0}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{0}
 }
 
 type GetStatusResponse struct {
@@ -130,13 +73,13 @@ type GetStatusResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Status ValveStatus `protobuf:"varint,1,opt,name=Status,proto3,enum=valvepb.ValveStatus" json:"Status,omitempty"`
+	Status shared.ValveStatus `protobuf:"varint,1,opt,name=Status,proto3,enum=shared.ValveStatus" json:"Status,omitempty"`
 }
 
 func (x *GetStatusResponse) Reset() {
 	*x = GetStatusResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[1]
+		mi := &file_valve_grpc_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -149,7 +92,7 @@ func (x *GetStatusResponse) String() string {
 func (*GetStatusResponse) ProtoMessage() {}
 
 func (x *GetStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[1]
+	mi := &file_valve_grpc_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -162,14 +105,14 @@ func (x *GetStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStatusResponse.ProtoReflect.Descriptor instead.
 func (*GetStatusResponse) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{1}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetStatusResponse) GetStatus() ValveStatus {
+func (x *GetStatusResponse) GetStatus() shared.ValveStatus {
 	if x != nil {
 		return x.Status
 	}
-	return ValveStatus_VALVE_UNSPECIFIED
+	return shared.ValveStatus_VALVE_UNSPECIFIED
 }
 
 type OpenValveRequest struct {
@@ -181,7 +124,7 @@ type OpenValveRequest struct {
 func (x *OpenValveRequest) Reset() {
 	*x = OpenValveRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[2]
+		mi := &file_valve_grpc_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -194,7 +137,7 @@ func (x *OpenValveRequest) String() string {
 func (*OpenValveRequest) ProtoMessage() {}
 
 func (x *OpenValveRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[2]
+	mi := &file_valve_grpc_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -207,7 +150,7 @@ func (x *OpenValveRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpenValveRequest.ProtoReflect.Descriptor instead.
 func (*OpenValveRequest) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{2}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{2}
 }
 
 type OpenValveResponse struct {
@@ -219,7 +162,7 @@ type OpenValveResponse struct {
 func (x *OpenValveResponse) Reset() {
 	*x = OpenValveResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[3]
+		mi := &file_valve_grpc_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -232,7 +175,7 @@ func (x *OpenValveResponse) String() string {
 func (*OpenValveResponse) ProtoMessage() {}
 
 func (x *OpenValveResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[3]
+	mi := &file_valve_grpc_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -245,7 +188,7 @@ func (x *OpenValveResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use OpenValveResponse.ProtoReflect.Descriptor instead.
 func (*OpenValveResponse) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{3}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{3}
 }
 
 type CloseValveRequest struct {
@@ -257,7 +200,7 @@ type CloseValveRequest struct {
 func (x *CloseValveRequest) Reset() {
 	*x = CloseValveRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[4]
+		mi := &file_valve_grpc_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -270,7 +213,7 @@ func (x *CloseValveRequest) String() string {
 func (*CloseValveRequest) ProtoMessage() {}
 
 func (x *CloseValveRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[4]
+	mi := &file_valve_grpc_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -283,7 +226,7 @@ func (x *CloseValveRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseValveRequest.ProtoReflect.Descriptor instead.
 func (*CloseValveRequest) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{4}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{4}
 }
 
 type CloseValveResponse struct {
@@ -295,7 +238,7 @@ type CloseValveResponse struct {
 func (x *CloseValveResponse) Reset() {
 	*x = CloseValveResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_valve_proto_msgTypes[5]
+		mi := &file_valve_grpc_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -308,7 +251,7 @@ func (x *CloseValveResponse) String() string {
 func (*CloseValveResponse) ProtoMessage() {}
 
 func (x *CloseValveResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_valve_proto_msgTypes[5]
+	mi := &file_valve_grpc_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -321,84 +264,75 @@ func (x *CloseValveResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CloseValveResponse.ProtoReflect.Descriptor instead.
 func (*CloseValveResponse) Descriptor() ([]byte, []int) {
-	return file_valve_proto_rawDescGZIP(), []int{5}
+	return file_valve_grpc_proto_rawDescGZIP(), []int{5}
 }
 
-var File_valve_proto protoreflect.FileDescriptor
+var File_valve_grpc_proto protoreflect.FileDescriptor
 
-var file_valve_proto_rawDesc = []byte{
-	0x0a, 0x0b, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x07, 0x76,
-	0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x22, 0x12, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x41, 0x0a, 0x11, 0x47, 0x65,
-	0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
-	0x2c, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0e, 0x32,
-	0x14, 0x2e, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x53,
-	0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x12, 0x0a,
-	0x10, 0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x22, 0x13, 0x0a, 0x11, 0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x13, 0x0a, 0x11, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56,
-	0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x43,
-	0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x2a, 0x7e, 0x0a, 0x0b, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73,
-	0x12, 0x15, 0x0a, 0x11, 0x56, 0x41, 0x4c, 0x56, 0x45, 0x5f, 0x55, 0x4e, 0x53, 0x50, 0x45, 0x43,
-	0x49, 0x46, 0x49, 0x45, 0x44, 0x10, 0x00, 0x12, 0x11, 0x0a, 0x0d, 0x56, 0x41, 0x4c, 0x56, 0x45,
-	0x5f, 0x49, 0x4e, 0x56, 0x41, 0x4c, 0x49, 0x44, 0x10, 0x01, 0x12, 0x11, 0x0a, 0x0d, 0x56, 0x41,
-	0x4c, 0x56, 0x45, 0x5f, 0x4f, 0x50, 0x45, 0x4e, 0x49, 0x4e, 0x47, 0x10, 0x02, 0x12, 0x0e, 0x0a,
-	0x0a, 0x56, 0x41, 0x4c, 0x56, 0x45, 0x5f, 0x4f, 0x50, 0x45, 0x4e, 0x10, 0x03, 0x12, 0x11, 0x0a,
-	0x0d, 0x56, 0x41, 0x4c, 0x56, 0x45, 0x5f, 0x43, 0x4c, 0x4f, 0x53, 0x49, 0x4e, 0x47, 0x10, 0x04,
-	0x12, 0x0f, 0x0a, 0x0b, 0x56, 0x41, 0x4c, 0x56, 0x45, 0x5f, 0x43, 0x4c, 0x4f, 0x53, 0x45, 0x10,
-	0x05, 0x32, 0xe3, 0x01, 0x0a, 0x0c, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x53, 0x65, 0x72, 0x76, 0x69,
-	0x63, 0x65, 0x12, 0x44, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12,
-	0x19, 0x2e, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61,
-	0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x76, 0x61, 0x6c,
-	0x76, 0x65, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x44, 0x0a, 0x09, 0x4f, 0x70, 0x65, 0x6e,
-	0x56, 0x61, 0x6c, 0x76, 0x65, 0x12, 0x19, 0x2e, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2e,
-	0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x1a, 0x2e, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2e, 0x4f, 0x70, 0x65, 0x6e, 0x56,
-	0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x47,
-	0x0a, 0x0a, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x12, 0x1a, 0x2e, 0x76,
-	0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76,
-	0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1b, 0x2e, 0x76, 0x61, 0x6c, 0x76, 0x65,
-	0x70, 0x62, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x31, 0x48, 0x03, 0x5a, 0x2d, 0x67, 0x69, 0x74,
-	0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x46, 0x72, 0x61, 0x6e, 0x63, 0x65, 0x73, 0x63,
-	0x6f, 0x49, 0x6c, 0x61, 0x72, 0x69, 0x6f, 0x2f, 0x67, 0x72, 0x6f, 0x77, 0x65, 0x72, 0x2f, 0x70,
-	0x6b, 0x67, 0x2f, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+var file_valve_grpc_proto_rawDesc = []byte{
+	0x0a, 0x10, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x12, 0x04, 0x67, 0x72, 0x70, 0x63, 0x1a, 0x12, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x2e,
+	0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x12, 0x0a, 0x10,
+	0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x22, 0x40, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x2b, 0x0a, 0x06, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x13, 0x2e, 0x73, 0x68, 0x61, 0x72, 0x65, 0x64, 0x2e, 0x56,
+	0x61, 0x6c, 0x76, 0x65, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x06, 0x53, 0x74, 0x61, 0x74,
+	0x75, 0x73, 0x22, 0x12, 0x0a, 0x10, 0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52,
+	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x13, 0x0a, 0x11, 0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61,
+	0x6c, 0x76, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x13, 0x0a, 0x11, 0x43,
+	0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x22, 0x14, 0x0a, 0x12, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x32, 0xd1, 0x01, 0x0a, 0x0c, 0x56, 0x61, 0x6c, 0x76, 0x65,
+	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3e, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x53, 0x74,
+	0x61, 0x74, 0x75, 0x73, 0x12, 0x16, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x47, 0x65, 0x74, 0x53,
+	0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x67,
+	0x72, 0x70, 0x63, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x74, 0x61, 0x74, 0x75, 0x73, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x3e, 0x0a, 0x09, 0x4f, 0x70, 0x65, 0x6e, 0x56,
+	0x61, 0x6c, 0x76, 0x65, 0x12, 0x16, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x4f, 0x70, 0x65, 0x6e,
+	0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x67,
+	0x72, 0x70, 0x63, 0x2e, 0x4f, 0x70, 0x65, 0x6e, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x73,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x41, 0x0a, 0x0a, 0x43, 0x6c, 0x6f, 0x73, 0x65,
+	0x56, 0x61, 0x6c, 0x76, 0x65, 0x12, 0x17, 0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x43, 0x6c, 0x6f,
+	0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x18,
+	0x2e, 0x67, 0x72, 0x70, 0x63, 0x2e, 0x43, 0x6c, 0x6f, 0x73, 0x65, 0x56, 0x61, 0x6c, 0x76, 0x65,
+	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x42, 0x36, 0x48, 0x03, 0x5a, 0x32,
+	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x46, 0x72, 0x61, 0x6e, 0x63,
+	0x65, 0x73, 0x63, 0x6f, 0x49, 0x6c, 0x61, 0x72, 0x69, 0x6f, 0x2f, 0x67, 0x72, 0x6f, 0x77, 0x65,
+	0x72, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x76, 0x61, 0x6c, 0x76, 0x65, 0x70, 0x62, 0x2f, 0x67, 0x72,
+	0x70, 0x63, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_valve_proto_rawDescOnce sync.Once
-	file_valve_proto_rawDescData = file_valve_proto_rawDesc
+	file_valve_grpc_proto_rawDescOnce sync.Once
+	file_valve_grpc_proto_rawDescData = file_valve_grpc_proto_rawDesc
 )
 
-func file_valve_proto_rawDescGZIP() []byte {
-	file_valve_proto_rawDescOnce.Do(func() {
-		file_valve_proto_rawDescData = protoimpl.X.CompressGZIP(file_valve_proto_rawDescData)
+func file_valve_grpc_proto_rawDescGZIP() []byte {
+	file_valve_grpc_proto_rawDescOnce.Do(func() {
+		file_valve_grpc_proto_rawDescData = protoimpl.X.CompressGZIP(file_valve_grpc_proto_rawDescData)
 	})
-	return file_valve_proto_rawDescData
+	return file_valve_grpc_proto_rawDescData
 }
 
-var file_valve_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_valve_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_valve_proto_goTypes = []interface{}{
-	(ValveStatus)(0),           // 0: valvepb.ValveStatus
-	(*GetStatusRequest)(nil),   // 1: valvepb.GetStatusRequest
-	(*GetStatusResponse)(nil),  // 2: valvepb.GetStatusResponse
-	(*OpenValveRequest)(nil),   // 3: valvepb.OpenValveRequest
-	(*OpenValveResponse)(nil),  // 4: valvepb.OpenValveResponse
-	(*CloseValveRequest)(nil),  // 5: valvepb.CloseValveRequest
-	(*CloseValveResponse)(nil), // 6: valvepb.CloseValveResponse
+var file_valve_grpc_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_valve_grpc_proto_goTypes = []interface{}{
+	(*GetStatusRequest)(nil),   // 0: grpc.GetStatusRequest
+	(*GetStatusResponse)(nil),  // 1: grpc.GetStatusResponse
+	(*OpenValveRequest)(nil),   // 2: grpc.OpenValveRequest
+	(*OpenValveResponse)(nil),  // 3: grpc.OpenValveResponse
+	(*CloseValveRequest)(nil),  // 4: grpc.CloseValveRequest
+	(*CloseValveResponse)(nil), // 5: grpc.CloseValveResponse
+	(shared.ValveStatus)(0),    // 6: shared.ValveStatus
 }
-var file_valve_proto_depIdxs = []int32{
-	0, // 0: valvepb.GetStatusResponse.Status:type_name -> valvepb.ValveStatus
-	1, // 1: valvepb.ValveService.GetStatus:input_type -> valvepb.GetStatusRequest
-	3, // 2: valvepb.ValveService.OpenValve:input_type -> valvepb.OpenValveRequest
-	5, // 3: valvepb.ValveService.CloseValve:input_type -> valvepb.CloseValveRequest
-	2, // 4: valvepb.ValveService.GetStatus:output_type -> valvepb.GetStatusResponse
-	4, // 5: valvepb.ValveService.OpenValve:output_type -> valvepb.OpenValveResponse
-	6, // 6: valvepb.ValveService.CloseValve:output_type -> valvepb.CloseValveResponse
+var file_valve_grpc_proto_depIdxs = []int32{
+	6, // 0: grpc.GetStatusResponse.Status:type_name -> shared.ValveStatus
+	0, // 1: grpc.ValveService.GetStatus:input_type -> grpc.GetStatusRequest
+	2, // 2: grpc.ValveService.OpenValve:input_type -> grpc.OpenValveRequest
+	4, // 3: grpc.ValveService.CloseValve:input_type -> grpc.CloseValveRequest
+	1, // 4: grpc.ValveService.GetStatus:output_type -> grpc.GetStatusResponse
+	3, // 5: grpc.ValveService.OpenValve:output_type -> grpc.OpenValveResponse
+	5, // 6: grpc.ValveService.CloseValve:output_type -> grpc.CloseValveResponse
 	4, // [4:7] is the sub-list for method output_type
 	1, // [1:4] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -406,13 +340,13 @@ var file_valve_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_valve_proto_init() }
-func file_valve_proto_init() {
-	if File_valve_proto != nil {
+func init() { file_valve_grpc_proto_init() }
+func file_valve_grpc_proto_init() {
+	if File_valve_grpc_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_valve_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetStatusRequest); i {
 			case 0:
 				return &v.state
@@ -424,7 +358,7 @@ func file_valve_proto_init() {
 				return nil
 			}
 		}
-		file_valve_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetStatusResponse); i {
 			case 0:
 				return &v.state
@@ -436,7 +370,7 @@ func file_valve_proto_init() {
 				return nil
 			}
 		}
-		file_valve_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OpenValveRequest); i {
 			case 0:
 				return &v.state
@@ -448,7 +382,7 @@ func file_valve_proto_init() {
 				return nil
 			}
 		}
-		file_valve_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*OpenValveResponse); i {
 			case 0:
 				return &v.state
@@ -460,7 +394,7 @@ func file_valve_proto_init() {
 				return nil
 			}
 		}
-		file_valve_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CloseValveRequest); i {
 			case 0:
 				return &v.state
@@ -472,7 +406,7 @@ func file_valve_proto_init() {
 				return nil
 			}
 		}
-		file_valve_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_valve_grpc_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*CloseValveResponse); i {
 			case 0:
 				return &v.state
@@ -489,21 +423,20 @@ func file_valve_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_valve_proto_rawDesc,
-			NumEnums:      1,
+			RawDescriptor: file_valve_grpc_proto_rawDesc,
+			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_valve_proto_goTypes,
-		DependencyIndexes: file_valve_proto_depIdxs,
-		EnumInfos:         file_valve_proto_enumTypes,
-		MessageInfos:      file_valve_proto_msgTypes,
+		GoTypes:           file_valve_grpc_proto_goTypes,
+		DependencyIndexes: file_valve_grpc_proto_depIdxs,
+		MessageInfos:      file_valve_grpc_proto_msgTypes,
 	}.Build()
-	File_valve_proto = out.File
-	file_valve_proto_rawDesc = nil
-	file_valve_proto_goTypes = nil
-	file_valve_proto_depIdxs = nil
+	File_valve_grpc_proto = out.File
+	file_valve_grpc_proto_rawDesc = nil
+	file_valve_grpc_proto_goTypes = nil
+	file_valve_grpc_proto_depIdxs = nil
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -533,7 +466,7 @@ func NewValveServiceClient(cc grpc.ClientConnInterface) ValveServiceClient {
 
 func (c *valveServiceClient) GetStatus(ctx context.Context, in *GetStatusRequest, opts ...grpc.CallOption) (*GetStatusResponse, error) {
 	out := new(GetStatusResponse)
-	err := c.cc.Invoke(ctx, "/valvepb.ValveService/GetStatus", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ValveService/GetStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -542,7 +475,7 @@ func (c *valveServiceClient) GetStatus(ctx context.Context, in *GetStatusRequest
 
 func (c *valveServiceClient) OpenValve(ctx context.Context, in *OpenValveRequest, opts ...grpc.CallOption) (*OpenValveResponse, error) {
 	out := new(OpenValveResponse)
-	err := c.cc.Invoke(ctx, "/valvepb.ValveService/OpenValve", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ValveService/OpenValve", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -551,7 +484,7 @@ func (c *valveServiceClient) OpenValve(ctx context.Context, in *OpenValveRequest
 
 func (c *valveServiceClient) CloseValve(ctx context.Context, in *CloseValveRequest, opts ...grpc.CallOption) (*CloseValveResponse, error) {
 	out := new(CloseValveResponse)
-	err := c.cc.Invoke(ctx, "/valvepb.ValveService/CloseValve", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/grpc.ValveService/CloseValve", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -593,7 +526,7 @@ func _ValveService_GetStatus_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/valvepb.ValveService/GetStatus",
+		FullMethod: "/grpc.ValveService/GetStatus",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValveServiceServer).GetStatus(ctx, req.(*GetStatusRequest))
@@ -611,7 +544,7 @@ func _ValveService_OpenValve_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/valvepb.ValveService/OpenValve",
+		FullMethod: "/grpc.ValveService/OpenValve",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValveServiceServer).OpenValve(ctx, req.(*OpenValveRequest))
@@ -629,7 +562,7 @@ func _ValveService_CloseValve_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/valvepb.ValveService/CloseValve",
+		FullMethod: "/grpc.ValveService/CloseValve",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ValveServiceServer).CloseValve(ctx, req.(*CloseValveRequest))
@@ -638,7 +571,7 @@ func _ValveService_CloseValve_Handler(srv interface{}, ctx context.Context, dec 
 }
 
 var _ValveService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "valvepb.ValveService",
+	ServiceName: "grpc.ValveService",
 	HandlerType: (*ValveServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -655,5 +588,5 @@ var _ValveService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "valve.proto",
+	Metadata: "valve.grpc.proto",
 }

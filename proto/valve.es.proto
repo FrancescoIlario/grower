@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package es;
+
+option optimize_for = LITE_RUNTIME;
+option go_package = "github.com/FrancescoIlario/grower/pkg/valvepb/es";
+
+import "google/protobuf/timestamp.proto";
+
+message ValveOpened {
+  string Id = 1;
+  google.protobuf.Timestamp Time = 2;
+}
+
+message ValveClosed {
+  string Id = 1;
+  google.protobuf.Timestamp Time = 2; 
+}
