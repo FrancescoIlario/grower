@@ -9,11 +9,11 @@ COPY go.mod .
 RUN go mod download \
     && go mod verify
 
-COPY cmd/valvecmdr/server cmd/valvecmdr/server
+COPY cmd/valvegrpc/server cmd/valvegrpc/server
 COPY internal internal
 COPY pkg/valvepb pkg/valvepb
 
-RUN go build -o bin/valvecmdr/server cmd/valvecmdr/server/main.go
+RUN go build -o bin/valvegrpc/server cmd/valvegrpc/server/main.go
 
 FROM prod 
-COPY --from=build /app/bin/valvecmdr/server /app
+COPY --from=build /app/bin/valvegrpc/server /app

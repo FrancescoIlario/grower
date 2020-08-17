@@ -1,15 +1,22 @@
 version: '3.8'
 services:
-  valvecmder:
+  valvegrpc:
     build: 
       context: ../../
-      dockerfile: build/docker/valvecmder/server/Dockerfile
+      dockerfile: build/docker/valvegrpc/server/Dockerfile
     environment: 
-      SCHEDULER_VALVE_CMDR_HOST: valvecmder
-      SCHEDULER_ADDRESS: localhost:8080
-      SCHEDULER_POSITIVE_PIN: 10
-      SCHEDULER_NEGATIVE_PIN: 4
-      SCHEDULER_PULSE_LENGTH: 20ms
+      VALVEGRPC_ADDRESS: "localhost:8080"
+      VALVEGRPC_AMQP_CONNECTION_STRING: "amqp://guest:guest@rabbitmq:5672/"
+      
+  valveproc:
+    build:
+      context: ../../
+      dockerfile: build/docker/valvecmdsproc/Dockerfile
+    environment:
+      VCMDSVR_POSITIVE_PIN: 10
+      VCMDSVR_NEGATIVE_PIN: 4
+      VCMDSVR_PULSE_LENGTH: 20ms
+      VCMDSVR_AMQP_CONNECTION_STRING: "amqp://guest:guest@rabbitmq:5672/"
 
   scheduler:
     build: 
@@ -26,3 +33,6 @@ services:
     environment:
       SHUTTER_ADDRESS: localhost:8080
       SHUTTER_OUTPUT_PIN: 27
+
+  prometheus:
+    image: prom/
