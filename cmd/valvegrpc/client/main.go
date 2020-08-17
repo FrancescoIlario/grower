@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/FrancescoIlario/grower/cmd/valvecmdr/client/cmd"
+	"github.com/FrancescoIlario/grower/cmd/valvegrpc/client/cmd"
 	"github.com/sirupsen/logrus"
 )
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	"github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +17,7 @@ var openCmd = &cobra.Command{
 		ctx, cancel := context.WithTimeout(mctx, 10*time.Second)
 		defer cancel()
 
-		if _, err := client.OpenValve(ctx, &valvepb.OpenValveRequest{}); err != nil {
+		if _, err := client.OpenValve(ctx, &grpc.OpenValveRequest{}); err != nil {
 			logrus.Fatalf("Could not open the valve: %v", err)
 		}
 

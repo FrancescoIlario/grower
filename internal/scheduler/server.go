@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	"github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/google/uuid"
@@ -19,13 +19,13 @@ import (
 
 type server struct {
 	cc     *cron.Cron
-	client valvepb.ValveServiceClient
+	client grpc.ValveServiceClient
 	mctx   context.Context
 	store  PairStore
 }
 
 // NewServer ...
-func NewServer(store PairStore, vsvc valvepb.ValveServiceClient) schedulerpb.ScheduleServiceServer {
+func NewServer(store PairStore, vsvc grpc.ValveServiceClient) schedulerpb.ScheduleServiceServer {
 	return &server{
 		cc:     cron.New(),
 		client: vsvc,
@@ -137,7 +137,7 @@ func (s *server) open() {
 	cont, cancel := context.WithTimeout(s.mctx, 1*time.Minute)
 	defer cancel()
 
-	s.client.OpenValve(cont, &valvepb.OpenValveRequest{})
+	s.client.OpenValve(cont, &grpc.OpenValveRequest{})
 	logrus.Debugf("opened %v", time.Now())
 }
 
@@ -146,7 +146,7 @@ func (s *server) close() {
 	cont, cancel := context.WithTimeout(s.mctx, 1*time.Minute)
 	defer cancel()
 
-	s.client.CloseValve(cont, &valvepb.CloseValveRequest{})
+	s.client.CloseValve(cont, &grpc.CloseValveRequest{})
 	logrus.Debugf("closeded %v", time.Now())
 }
 

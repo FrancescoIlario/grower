@@ -8,12 +8,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/FrancescoIlario/grower/internal/mocks"
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
-	"github.com/FrancescoIlario/grower/internal/valve"
+	vgrpc "github.com/FrancescoIlario/grower/internal/valve/grpc"
+	"github.com/FrancescoIlario/grower/internal/valve/mocks"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
 )
@@ -44,9 +44,14 @@ func arrangeGet(ctx context.Context, t *testing.T) {
 	}
 	pairToRead.ID = id.String()
 
-	cmder := mocks.NewValveCmder(200 * time.Millisecond)
+	publisher := mocks.DefaultPublisher()
+
 	s := grpc.NewServer()
-	valvepb.RegisterValveServiceServer(s, valve.NewGrpcServer(cmder))
+	vlvsrv, err := vgrpc.NewGrpcServer(publisher)
+	if err != nil {
+		log.Fatalf("Failed to create grpc server: %v", err)
+	}
+	valvepb.RegisterValveServiceServer(s, vlvsrv)
 
 	lis = bufconn.Listen(bufSize)
 	conn, err = grpc.DialContext(ctx, "bufnet",

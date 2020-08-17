@@ -1,6 +1,6 @@
-package valve
+package proc
 
-import "github.com/FrancescoIlario/grower/pkg/valvepb"
+import "github.com/FrancescoIlario/grower/pkg/valvepb/shared"
 
 // Status ...
 type Status int
@@ -18,19 +18,19 @@ const (
 	StatusClose
 )
 
-func (s *Status) toStatusPB() valvepb.ValveStatus {
+func (s *Status) toStatusPB() shared.ValveStatus {
 	switch *s {
 	case StatusInvalid:
-		return valvepb.ValveStatus_VALVE_INVALID
+		return shared.ValveStatus_VALVE_INVALID
 	case StatusOpening:
-		return valvepb.ValveStatus_VALVE_OPENING
+		return shared.ValveStatus_VALVE_OPENING
 	case StatusOpen:
-		return valvepb.ValveStatus_VALVE_OPEN
+		return shared.ValveStatus_VALVE_OPEN
 	case StatusClosing:
-		return valvepb.ValveStatus_VALVE_CLOSING
+		return shared.ValveStatus_VALVE_CLOSING
 	case StatusClose:
-		return valvepb.ValveStatus_VALVE_CLOSE
+		return shared.ValveStatus_VALVE_CLOSE
 	default:
-		return valvepb.ValveStatus_VALVE_UNSPECIFIED
+		return shared.ValveStatus_VALVE_UNSPECIFIED
 	}
 }

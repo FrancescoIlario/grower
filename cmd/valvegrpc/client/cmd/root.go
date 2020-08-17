@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"

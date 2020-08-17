@@ -2,18 +2,16 @@ package scheduler_test
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"testing"
-	"time"
 
-	"github.com/FrancescoIlario/grower/internal/mocks"
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
-	"github.com/FrancescoIlario/grower/internal/valve"
+	vgrpc "github.com/FrancescoIlario/grower/internal/valve/grpc"
+	"github.com/FrancescoIlario/grower/internal/valve/mocks"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/test/bufconn"
@@ -21,19 +19,22 @@ import (
 
 func arrange(ctx context.Context, t *testing.T) {
 	store = memstore.New()
-	cmder := mocks.NewValveCmder(200 * time.Millisecond)
+	publisher := mocks.DefaultPublisher()
 
 	s := grpc.NewServer()
-	valvepb.RegisterValveServiceServer(s, valve.NewGrpcServer(cmder))
+	vlvsrv, err := vgrpc.NewGrpcServer(publisher)
+	if err != nil {
+		log.Fatalf("Failed to create grpc server: %v", err)
+	}
+	valvepb.RegisterValveServiceServer(s, vlvsrv)
 
 	lis = bufconn.Listen(bufSize)
-	var err error
 	conn, err = grpc.DialContext(ctx, "bufnet",
 		grpc.WithContextDialer(func(context.Context, string) (net.Conn, error) {
 			return lis.Dial()
 		}), grpc.WithInsecure())
 	if err != nil {
-		panic(fmt.Errorf("Failed to dial bufnet: %w", err))
+		log.Fatalf("Failed to dial bufnet: %v", err)
 	}
 
 	valvecli := valvepb.NewValveServiceClient(conn)

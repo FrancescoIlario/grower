@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/FrancescoIlario/grower/internal/valve"
+	"github.com/FrancescoIlario/grower/internal/valve/proc"
 	"github.com/spf13/cobra"
 	"github.com/stianeikeland/go-rpio/v4"
 )
@@ -13,7 +13,7 @@ var closeCmd = &cobra.Command{
 	Short: "Closes the valve",
 	Run: func(cmd *cobra.Command, args []string) {
 		pp, np := rpio.Pin(positiveRelayPin), rpio.Pin(negativeRelayPin)
-		cmder := valve.NewCommander(pp, np, pulseLength)
+		cmder := proc.NewCommander(pp, np, pulseLength)
 
 		cmder.Close()
 		fmt.Println("Valve closed")

@@ -8,7 +8,7 @@ import (
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )

@@ -11,10 +11,10 @@ const EnvPrefix = "VCMDSVR"
 
 // Configuration ValveCmdr service configuration
 type Configuration struct {
-	Address     string        `default:"localhost:24100"`
-	PositivePin uint8         `default:"10" split_words:"true"`
-	NegativePin uint8         `default:"4" split_words:"true"`
-	PulseLength time.Duration `default:"20ms" split_words:"true"`
+	PositivePin          uint8         `default:"10" split_words:"true"`
+	NegativePin          uint8         `default:"4" split_words:"true"`
+	PulseLength          time.Duration `default:"20ms" split_words:"true"`
+	AmqpConnectionString string        `default:"amqp://guest:guest@rabbitmq:5672/"`
 }
 
 // GetConfigurationFromEnv ...

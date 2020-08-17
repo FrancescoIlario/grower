@@ -1,12 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"net"
 	"os"
 
-	"github.com/FrancescoIlario/grower/cmd/valvecmdr/server/conf"
-	"github.com/FrancescoIlario/grower/internal/valve"
-	"github.com/FrancescoIlario/grower/pkg/valvepb"
+	"github.com/FrancescoIlario/grower/cmd/valvegrpc/server/conf"
+	vgrpc "github.com/FrancescoIlario/grower/internal/valve/grpc"
+	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
+	"github.com/ThreeDotsLabs/watermill"
+	"github.com/ThreeDotsLabs/watermill-amqp/pkg/amqp"
+	"github.com/ThreeDotsLabs/watermill/message"
+
 	"github.com/sirupsen/logrus"
 	"github.com/stianeikeland/go-rpio/v4"
 	"google.golang.org/grpc"
@@ -43,16 +48,31 @@ func main() {
 	rpio.Open()
 	defer rpio.Close()
 
-	pp, np := rpio.Pin(c.PositivePin), rpio.Pin(c.NegativePin)
-	cmder := valve.NewCommander(pp, np, c.PulseLength)
-	logrus.Debugf("valve cmder initialized with ppin %d, npin %d, and duration %v", pp, np, c.PulseLength)
+	commandsPublisher, err := cmdPublisher(c)
+	if err != nil {
+		logrus.Fatal(err)
+	}
 
 	grpcServer := grpc.NewServer()
-	valveServer := valve.NewGrpcServer(cmder)
+	valveServer, err := vgrpc.NewGrpcServer(commandsPublisher)
+	if err != nil {
+		logrus.Fatalf("Error initializing server: %v", err)
+	}
 	valvepb.RegisterValveServiceServer(grpcServer, valveServer)
 
 	logrus.Debugf("starting server at %v", c.Address)
 	if err := grpcServer.Serve(ls); err != nil {
 		logrus.Fatalf("Error serving: %v", err)
 	}
+}
+
+func cmdPublisher(c conf.Configuration) (message.Publisher, error) {
+	logger := watermill.NewStdLogger(false, false)
+	commandsAMQPConfig := amqp.NewDurableQueueConfig(c.AmqpConnectionString)
+	commandsPublisher, err := amqp.NewPublisher(commandsAMQPConfig, logger)
+	if err != nil {
+		return nil, fmt.Errorf("unable to create watermill commands publisher: %w", err)
+	}
+
+	return commandsPublisher, nil
 }
