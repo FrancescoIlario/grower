@@ -20,9 +20,10 @@ import (
 func arrange(ctx context.Context, t *testing.T) {
 	store = memstore.New()
 	publisher := mocks.DefaultPublisher()
+	subscriber := mocks.DefaultSubscriber()
 
 	s := grpc.NewServer()
-	vlvsrv, err := vgrpc.NewGrpcServer(publisher)
+	vlvsrv, err := vgrpc.NewGrpcServer(publisher, subscriber)
 	if err != nil {
 		log.Fatalf("Failed to create grpc server: %v", err)
 	}

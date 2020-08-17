@@ -2,10 +2,10 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 
 	vcqrs "github.com/FrancescoIlario/grower/pkg/valvepb/cqrs"
 	"github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
-	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
 	"github.com/golang/protobuf/ptypes"
@@ -15,19 +15,25 @@ import (
 )
 
 type valveServer struct {
-	facade cqrs.Facade
+	commandBus *cqrs.CommandBus
 }
 
 // NewGrpcServer ...
-func NewGrpcServer(commandsPublisher message.Publisher) (grpc.ValveServiceServer, error) {
-	facade, err := cqrsFacade(&commandsPublisher)
-	if err != nil {
-		return nil, err
-	}
+func NewGrpcServer(commandsPublisher message.Publisher, commandSubscriber message.Subscriber) (grpc.ValveServiceServer, error) {
+	cqrsMarshaler := cqrs.ProtobufMarshaler{}
 
-	return &valveServer{
-		facade: *facade,
-	}, nil
+	commandBus, err := cqrs.NewCommandBus(
+		commandsPublisher,
+		func(commandName string) string {
+			// we are using queue RabbitMQ config, so we need to have topic per command type
+			return commandName
+		},
+		cqrsMarshaler,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("cannot create command bus: %w", err)
+	}
+	return &valveServer{commandBus: commandBus}, nil
 }
 
 func (v *valveServer) GetStatus(context.Context, *grpc.GetStatusRequest) (*grpc.GetStatusResponse, error) {
@@ -45,7 +51,7 @@ func (v *valveServer) OpenValve(ctx context.Context, req *grpc.OpenValveRequest)
 		CreationTime: ptypes.TimestampNow(),
 	}
 
-	if err := v.facade.CommandBus().Send(ctx, cmd); err != nil {
+	if err := v.commandBus.Send(ctx, cmd); err != nil {
 		return nil, status.Errorf(codes.Internal, "error sending open valve command: %v", err)
 	}
 
@@ -58,39 +64,9 @@ func (v *valveServer) CloseValve(ctx context.Context, req *grpc.CloseValveReques
 		CreationTime: ptypes.TimestampNow(),
 	}
 
-	cb := v.facade.CommandBus()
-	if err := cb.Send(ctx, cmd); err != nil {
+	if err := v.commandBus.Send(ctx, cmd); err != nil {
 		return nil, status.Errorf(codes.Internal, "error sending close valve command: %v", err)
 	}
 
 	return &grpc.CloseValveResponse{}, nil
-}
-
-func cqrsFacade(commandsPublisher *message.Publisher) (*cqrs.Facade, error) {
-	logger := watermill.NewStdLogger(false, false)
-
-	// CQRS is built on messages router. Detailed documentation: https://watermill.io/docs/messages-router/
-	router, err := message.NewRouter(message.RouterConfig{}, logger)
-	if err != nil {
-		return nil, err
-	}
-
-	cqrsMarshaler := cqrs.ProtobufMarshaler{}
-
-	// cqrs.Facade is facade for Command and Event buses and processors.
-	cqrsFacade, err := cqrs.NewFacade(cqrs.FacadeConfig{
-		GenerateCommandsTopic: func(commandName string) string {
-			// we are using queue RabbitMQ config, so we need to have topic per command type
-			return commandName
-		},
-		CommandsPublisher:     *commandsPublisher,
-		Router:                router,
-		CommandEventMarshaler: cqrsMarshaler,
-		Logger:                logger,
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	return cqrsFacade, nil
 }
