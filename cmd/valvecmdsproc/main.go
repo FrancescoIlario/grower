@@ -105,6 +105,7 @@ func startConsumers(ctx context.Context, c conf.Configuration, cmder proc.Comman
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
 			return []cqrs.CommandHandler{
 				proc.NewOpenHandler(eb, cmder),
+				proc.NewCloseHandler(eb, cmder),
 			}
 		},
 		CommandsPublisher: commandsPublisher,
