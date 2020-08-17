@@ -18,7 +18,7 @@ type OpenedEvent struct{}
 // OpenHandler is a command handler, which handles OpenCommand and emits ValveOpened.
 //
 // In CQRS, one command must be handled by only one handler.
-// When another handler with this command is added to command processor, error will be retuerned.
+// When another handler with this command is added to command processor, error will be returned.
 type OpenHandler struct {
 	eventBus *cqrs.EventBus
 	Cmder    Commander
