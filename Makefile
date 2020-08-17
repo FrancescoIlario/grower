@@ -96,7 +96,7 @@ schedulerctl: bindir
 
 .PHONY: utest scheduler-itest
 utest:
-	go run ./... -short
+	go test ./... -short
 
 scheduler-itest:
 	eval integration/scheduler/mongostore/runtest.sh
