@@ -6,10 +6,10 @@ import (
 	"net"
 	"testing"
 
+	"github.com/FrancescoIlario/grower/internal/mocks"
 	"github.com/FrancescoIlario/grower/internal/scheduler"
 	"github.com/FrancescoIlario/grower/internal/scheduler/memstore"
 	vgrpc "github.com/FrancescoIlario/grower/internal/valve/grpc"
-	"github.com/FrancescoIlario/grower/internal/valve/mocks"
 	"github.com/FrancescoIlario/grower/pkg/schedulerpb"
 	valvepb "github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/google/uuid"
