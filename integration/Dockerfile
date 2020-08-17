@@ -1,4 +1,4 @@
-FROM golang:1.15-rc
+FROM golang:1.15
 WORKDIR /app
 
 # RUN apt-get update \

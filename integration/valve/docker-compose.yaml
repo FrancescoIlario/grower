@@ -1,0 +1,18 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3.8.6
+    restart: unless-stopped
+
+  itest:
+    build: 
+      context: ../../
+      dockerfile: integration/Dockerfile
+    environment: 
+      RABBITMQ_CONNSTR: "amqp://guest:guest@rabbitmq:5672/"
+    working_dir: /app
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    command: 'bash -c "sleep 10s && go test ./internal/valve -run Integration"'
