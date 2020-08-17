@@ -15,8 +15,8 @@ type subscriber struct {
 
 // Subscriber mock that overloads the watermill message.Subscriber interface
 type Subscriber interface {
-	Subscribe(ctx context.Context, topic string) (<-chan *message.Message, error)
-	Close() error
+	message.Subscriber
+
 	SubscribeCounter() int
 	CloseCounter() int
 }

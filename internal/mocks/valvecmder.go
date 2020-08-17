@@ -6,14 +6,23 @@ import (
 	"github.com/FrancescoIlario/grower/internal/valve/proc"
 )
 
-// ValveCmder ...
 type valveCmder struct {
-	status proc.Status
-	Delay  time.Duration
+	status       proc.Status
+	Delay        time.Duration
+	openCounter  int
+	closeCounter int
+}
+
+// Commander ...
+type Commander interface {
+	proc.Commander
+
+	OpenInvokation() int
+	CloseInvokation() int
 }
 
 // NewValveCmder ...
-func NewValveCmder(delay time.Duration) proc.Commander {
+func NewValveCmder(delay time.Duration) Commander {
 	return &valveCmder{
 		Delay: delay,
 	}
@@ -26,6 +35,7 @@ func (v *valveCmder) Status() proc.Status {
 
 // Open ...
 func (v *valveCmder) Open() {
+	v.openCounter++
 	v.status = proc.StatusOpening
 	time.Sleep(v.Delay)
 	v.status = proc.StatusOpen
@@ -33,7 +43,16 @@ func (v *valveCmder) Open() {
 
 // Close ...
 func (v *valveCmder) Close() {
+	v.closeCounter++
 	v.status = proc.StatusClosing
 	time.Sleep(v.Delay)
 	v.status = proc.StatusClose
+}
+
+func (v *valveCmder) OpenInvokation() int {
+	return v.openCounter
+}
+
+func (v *valveCmder) CloseInvokation() int {
+	return v.closeCounter
 }
