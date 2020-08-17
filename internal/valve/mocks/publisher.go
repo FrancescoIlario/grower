@@ -1,6 +1,10 @@
 package mocks
 
-import "github.com/ThreeDotsLabs/watermill/message"
+import (
+	"log"
+
+	"github.com/ThreeDotsLabs/watermill/message"
+)
 
 // mockPublisher mock that implements the watermill message.Publisher interface
 type mockPublisher struct {
@@ -35,6 +39,10 @@ func CustomClosePublisher(publish func(topic string, messages ...*message.Messag
 func (p *mockPublisher) Publish(topic string, messages ...*message.Message) error {
 	if p.publish != nil {
 		return p.publish(topic, messages...)
+	}
+
+	for _, msg := range messages {
+		log.Printf("message published: %v", msg.UUID)
 	}
 	return nil
 }
