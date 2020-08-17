@@ -19,7 +19,7 @@ type valveServer struct {
 }
 
 // NewGrpcServer ...
-func NewGrpcServer(commandsPublisher message.Publisher, commandSubscriber message.Subscriber) (grpc.ValveServiceServer, error) {
+func NewGrpcServer(commandsPublisher message.Publisher) (grpc.ValveServiceServer, error) {
 	cqrsMarshaler := cqrs.ProtobufMarshaler{}
 
 	commandBus, err := cqrs.NewCommandBus(
