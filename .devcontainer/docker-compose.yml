@@ -1,9 +1,9 @@
-version: '3'
+version: "3"
 services:
   dev:
     user: vscode
 
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
 
@@ -18,16 +18,25 @@ services:
       # mount Kubernetes config dir
       - ~/.kube:/home/vscode/.kube:cached
       # Forwards the local Docker socket to the container.
-      - /var/run/docker.sock:/var/run/docker.sock 
+      - /var/run/docker.sock:/var/run/docker.sock
 
     # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
     cap_add:
-     - SYS_PTRACE
+      - SYS_PTRACE
     security_opt:
       - seccomp:unconfined
 
+    links:
+      - rabbitmq
+
     # Overrides default command so things don't shut down after the process ends.
-    command: sleep infinity 
+    command: sleep infinity
+
+  rabbitmq:
+    image: rabbitmq:3.8.7-management
+    restart: unless-stopped
+    ports:
+      - 15672:15672
 
 volumes:
   mongodata:
