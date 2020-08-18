@@ -38,7 +38,7 @@ func init() {
 	}
 }
 
-func arrange(ctx context.Context, t *testing.T) {
+func arrange(ctx context.Context, t *testing.T) func() {
 	cmder = mocks.NewValveCmder(100 * time.Millisecond)
 
 	publisher, err := cmdPublisher()
@@ -79,6 +79,14 @@ func arrange(ctx context.Context, t *testing.T) {
 			log.Fatalf("Consumers exited with error: %v", err)
 		}
 	}()
+
+	return func() {
+		publisher.Close()
+		router.Close()
+
+		s.Stop()
+		conn.Close()
+	}
 }
 
 func cmdPublisher() (message.Publisher, error) {
@@ -95,7 +103,6 @@ func cmdPublisher() (message.Publisher, error) {
 func setupCQRS(ctx context.Context, connStr string, cmder proc.Commander) (*message.Router, error) {
 	logger := watermill.NewStdLogger(false, false)
 	cqrsMarshaler := cqrs.ProtobufMarshaler{}
-	// cqrsMarshaler := cqrs.JSONMarshaler{}
 
 	// CQRS is built on messages router. Detailed documentation: https://watermill.io/docs/messages-router/
 	router, err := message.NewRouter(message.RouterConfig{}, logger)
@@ -178,7 +185,8 @@ func Test_OpenValve_Integration(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	arrange(ctx, t)
+	closer := arrange(ctx, t)
+	defer closer()
 
 	client := valvepb.NewValveServiceClient(conn)
 	_, err := client.OpenValve(ctx, &valvepb.OpenValveRequest{})
@@ -200,7 +208,8 @@ func Test_CloseValve_Integration(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	arrange(ctx, t)
+	closer := arrange(ctx, t)
+	defer closer()
 
 	client := valvepb.NewValveServiceClient(conn)
 	_, err := client.CloseValve(ctx, &valvepb.CloseValveRequest{})

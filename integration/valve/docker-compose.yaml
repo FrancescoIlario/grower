@@ -1,8 +1,10 @@
 version: '3'
 services:
   rabbitmq:
-    image: rabbitmq:3.8.6
+    image: rabbitmq:3.8.7-management
     restart: unless-stopped
+    ports:
+      - 25672:15672
 
   itest:
     build: 
