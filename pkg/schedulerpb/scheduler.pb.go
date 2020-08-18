@@ -9,14 +9,14 @@ package schedulerpb
 import (
 	context "context"
 	proto "github.com/golang/protobuf/proto"
-	empty "github.com/golang/protobuf/ptypes/empty"
-	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	_ "github.com/mwitkow/go-proto-validators"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -321,10 +321,10 @@ type Schedule struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id           string               `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	CreationTime *timestamp.Timestamp `protobuf:"bytes,2,opt,name=CreationTime,proto3" json:"CreationTime,omitempty"`
-	OpenTime     *TimePoint           `protobuf:"bytes,3,opt,name=OpenTime,proto3" json:"OpenTime,omitempty"`
-	CloseTime    *TimePoint           `protobuf:"bytes,4,opt,name=CloseTime,proto3" json:"CloseTime,omitempty"`
+	Id           string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	CreationTime *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=CreationTime,proto3" json:"CreationTime,omitempty"`
+	OpenTime     *TimePoint             `protobuf:"bytes,3,opt,name=OpenTime,proto3" json:"OpenTime,omitempty"`
+	CloseTime    *TimePoint             `protobuf:"bytes,4,opt,name=CloseTime,proto3" json:"CloseTime,omitempty"`
 }
 
 func (x *Schedule) Reset() {
@@ -366,7 +366,7 @@ func (x *Schedule) GetId() string {
 	return ""
 }
 
-func (x *Schedule) GetCreationTime() *timestamp.Timestamp {
+func (x *Schedule) GetCreationTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreationTime
 	}
@@ -547,8 +547,8 @@ var file_scheduler_proto_goTypes = []interface{}{
 	(*DeleteScheduleRequest)(nil), // 5: schedulerpb.DeleteScheduleRequest
 	(*Schedule)(nil),              // 6: schedulerpb.Schedule
 	(*TimePoint)(nil),             // 7: schedulerpb.TimePoint
-	(*timestamp.Timestamp)(nil),   // 8: google.protobuf.Timestamp
-	(*empty.Empty)(nil),           // 9: google.protobuf.Empty
+	(*timestamppb.Timestamp)(nil), // 8: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),         // 9: google.protobuf.Empty
 }
 var file_scheduler_proto_depIdxs = []int32{
 	6,  // 0: schedulerpb.ListSchedulesResponse.Schedules:type_name -> schedulerpb.Schedule
@@ -711,7 +711,7 @@ type ScheduleServiceClient interface {
 	ListSchedules(ctx context.Context, in *ListSchedulesRequest, opts ...grpc.CallOption) (*ListSchedulesResponse, error)
 	GetSchedule(ctx context.Context, in *GetScheduleRequest, opts ...grpc.CallOption) (*Schedule, error)
 	CreateSchedule(ctx context.Context, in *CreateScheduleRequest, opts ...grpc.CallOption) (*Schedule, error)
-	DeleteSchedule(ctx context.Context, in *DeleteScheduleRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	DeleteSchedule(ctx context.Context, in *DeleteScheduleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type scheduleServiceClient struct {
@@ -749,8 +749,8 @@ func (c *scheduleServiceClient) CreateSchedule(ctx context.Context, in *CreateSc
 	return out, nil
 }
 
-func (c *scheduleServiceClient) DeleteSchedule(ctx context.Context, in *DeleteScheduleRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *scheduleServiceClient) DeleteSchedule(ctx context.Context, in *DeleteScheduleRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/schedulerpb.ScheduleService/DeleteSchedule", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -763,7 +763,7 @@ type ScheduleServiceServer interface {
 	ListSchedules(context.Context, *ListSchedulesRequest) (*ListSchedulesResponse, error)
 	GetSchedule(context.Context, *GetScheduleRequest) (*Schedule, error)
 	CreateSchedule(context.Context, *CreateScheduleRequest) (*Schedule, error)
-	DeleteSchedule(context.Context, *DeleteScheduleRequest) (*empty.Empty, error)
+	DeleteSchedule(context.Context, *DeleteScheduleRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedScheduleServiceServer can be embedded to have forward compatible implementations.
@@ -779,7 +779,7 @@ func (*UnimplementedScheduleServiceServer) GetSchedule(context.Context, *GetSche
 func (*UnimplementedScheduleServiceServer) CreateSchedule(context.Context, *CreateScheduleRequest) (*Schedule, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSchedule not implemented")
 }
-func (*UnimplementedScheduleServiceServer) DeleteSchedule(context.Context, *DeleteScheduleRequest) (*empty.Empty, error) {
+func (*UnimplementedScheduleServiceServer) DeleteSchedule(context.Context, *DeleteScheduleRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteSchedule not implemented")
 }
 

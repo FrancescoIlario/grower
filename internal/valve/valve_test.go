@@ -33,10 +33,14 @@ var (
 
 func init() {
 	rabbitmqConnstr = os.Getenv("RABBITMQ_CONNSTR")
-	cmder = mocks.NewValveCmder(100 * time.Millisecond)
+	if rabbitmqConnstr == "" {
+		rabbitmqConnstr = "amqp://guest:guest@rabbitmq:5672/"
+	}
 }
 
 func arrange(ctx context.Context, t *testing.T) {
+	cmder = mocks.NewValveCmder(100 * time.Millisecond)
+
 	publisher, err := cmdPublisher()
 	if err != nil {
 		t.Fatalf("error creating command publisher: %v", err)
@@ -58,6 +62,11 @@ func arrange(ctx context.Context, t *testing.T) {
 		t.Fatalf("Failed to dial bufnet: %v", err)
 	}
 
+	router, err := setupCQRS(ctx, rabbitmqConnstr, cmder)
+	if err != nil {
+		log.Fatalf("Consumers setup exited with error: %v", err)
+	}
+
 	go func() {
 		if err := s.Serve(lis); err != nil {
 			log.Fatalf("Server exited with error: %v", err)
@@ -65,7 +74,8 @@ func arrange(ctx context.Context, t *testing.T) {
 	}()
 
 	go func() {
-		if err := startConsumers(ctx, rabbitmqConnstr, cmder); err != nil {
+		// processors are based on router, so they will work when router will start
+		if err := router.Run(context.Background()); err != nil {
 			log.Fatalf("Consumers exited with error: %v", err)
 		}
 	}()
@@ -82,14 +92,15 @@ func cmdPublisher() (message.Publisher, error) {
 	return commandsPublisher, nil
 }
 
-func startConsumers(ctx context.Context, connStr string, cmder proc.Commander) error {
+func setupCQRS(ctx context.Context, connStr string, cmder proc.Commander) (*message.Router, error) {
 	logger := watermill.NewStdLogger(false, false)
 	cqrsMarshaler := cqrs.ProtobufMarshaler{}
+	// cqrsMarshaler := cqrs.JSONMarshaler{}
 
 	// CQRS is built on messages router. Detailed documentation: https://watermill.io/docs/messages-router/
 	router, err := message.NewRouter(message.RouterConfig{}, logger)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// You can use any Pub/Sub implementation from here: https://watermill.io/docs/pub-sub-implementations/
@@ -98,19 +109,18 @@ func startConsumers(ctx context.Context, connStr string, cmder proc.Commander) e
 	commandsAMQPConfig := amqp.NewDurableQueueConfig(connStr)
 	commandsPublisher, err := amqp.NewPublisher(commandsAMQPConfig, logger)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	commandsSubscriber, err := amqp.NewSubscriber(commandsAMQPConfig, logger)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Events will be published to PubSub configured Rabbit, because they may be consumed by multiple consumers.
-	// (in that case BookingsFinancialReport and OrderBeerOnRoomBooked).
 	durablePubSub := amqp.NewDurablePubSubConfig(connStr, nil)
 	eventsPublisher, err := amqp.NewPublisher(durablePubSub, logger)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// Simple middleware which will recover panics from event or command handlers.
@@ -145,20 +155,23 @@ func startConsumers(ctx context.Context, connStr string, cmder proc.Commander) e
 			// we can also use topic per event type
 			// return eventName
 		},
+		EventsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
+			config := amqp.NewDurablePubSubConfig(
+				rabbitmqConnstr,
+				amqp.GenerateQueueNameTopicNameWithSuffix(handlerName),
+			)
+
+			return amqp.NewSubscriber(config, logger)
+		},
 		EventsPublisher:       eventsPublisher,
 		Router:                router,
 		CommandEventMarshaler: cqrsMarshaler,
 		Logger:                logger,
 	}); err != nil {
-		return err
+		return nil, err
 	}
 
-	// processors are based on router, so they will work when router will start
-	if err := router.Run(context.Background()); err != nil {
-		return err
-	}
-
-	return nil
+	return router, nil
 }
 
 func Test_OpenValve_Integration(t *testing.T) {
@@ -172,6 +185,9 @@ func Test_OpenValve_Integration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error invoking endpoint: %v", err)
 	}
+
+	time.Sleep(4 * time.Second)
+
 	if exp, obt := 1, cmder.OpenInvokation(); obt != exp {
 		t.Errorf("expected %v open invokation, obtained %v", exp, obt)
 	}
@@ -191,6 +207,9 @@ func Test_CloseValve_Integration(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error invoking endpoint: %v", err)
 	}
+
+	time.Sleep(4 * time.Second)
+
 	if exp, obt := 1, cmder.CloseInvokation(); obt != exp {
 		t.Errorf("expected %v close invokation, obtained %v", exp, obt)
 	}

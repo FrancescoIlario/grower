@@ -3,17 +3,11 @@ package proc
 import (
 	"context"
 
+	vcqrs "github.com/FrancescoIlario/grower/pkg/valvepb/cqrs"
 	"github.com/FrancescoIlario/grower/pkg/valvepb/es"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 )
-
-// CloseCommand ...
-type CloseCommand struct{}
-
-// ClosedEvent ...
-type ClosedEvent struct{}
 
 // CloseHandler is a command handler, which handles CloseCommand and emits ValveCloseed.
 //
@@ -31,7 +25,7 @@ func (b CloseHandler) HandlerName() string {
 
 // NewCommand returns type of command which this handle should handle. It must be a pointer.
 func (b CloseHandler) NewCommand() interface{} {
-	return &CloseCommand{}
+	return &vcqrs.CloseValveCommand{}
 }
 
 // Handle ...
@@ -39,8 +33,7 @@ func (b CloseHandler) Handle(ctx context.Context, c interface{}) error {
 	b.Cmder.Close()
 
 	if err := b.eventBus.Publish(ctx, &es.ValveClosed{
-		Time: ptypes.TimestampNow(),
-		Id:   uuid.New().String(),
+		Id: uuid.New().String(),
 	}); err != nil {
 		return err
 	}

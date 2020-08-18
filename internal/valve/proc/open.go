@@ -3,17 +3,11 @@ package proc
 import (
 	"context"
 
+	vcqrs "github.com/FrancescoIlario/grower/pkg/valvepb/cqrs"
 	"github.com/FrancescoIlario/grower/pkg/valvepb/es"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 )
-
-// OpenCommand ...
-type OpenCommand struct{}
-
-// OpenedEvent ...
-type OpenedEvent struct{}
 
 // OpenHandler is a command handler, which handles OpenCommand and emits ValveOpened.
 //
@@ -31,7 +25,7 @@ func (b OpenHandler) HandlerName() string {
 
 // NewCommand returns type of command which this handle should handle. It must be a pointer.
 func (b OpenHandler) NewCommand() interface{} {
-	return &OpenCommand{}
+	return &vcqrs.OpenValveCommand{}
 }
 
 // Handle ...
@@ -39,8 +33,7 @@ func (b OpenHandler) Handle(ctx context.Context, c interface{}) error {
 	b.Cmder.Open()
 
 	if err := b.eventBus.Publish(ctx, &es.ValveOpened{
-		Time: ptypes.TimestampNow(),
-		Id:   uuid.New().String(),
+		Id: uuid.New().String(),
 	}); err != nil {
 		return err
 	}

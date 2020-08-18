@@ -9,12 +9,12 @@ package shutterpb
 import (
 	context "context"
 	proto "github.com/golang/protobuf/proto"
-	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 )
@@ -100,8 +100,8 @@ func file_shutter_proto_rawDescGZIP() []byte {
 
 var file_shutter_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_shutter_proto_goTypes = []interface{}{
-	(*ShutRequest)(nil), // 0: shutterpb.ShutRequest
-	(*empty.Empty)(nil), // 1: google.protobuf.Empty
+	(*ShutRequest)(nil),   // 0: shutterpb.ShutRequest
+	(*emptypb.Empty)(nil), // 1: google.protobuf.Empty
 }
 var file_shutter_proto_depIdxs = []int32{
 	0, // 0: shutterpb.ShutterService.Shut:input_type -> shutterpb.ShutRequest
@@ -164,7 +164,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ShutterServiceClient interface {
-	Shut(ctx context.Context, in *ShutRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	Shut(ctx context.Context, in *ShutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type shutterServiceClient struct {
@@ -175,8 +175,8 @@ func NewShutterServiceClient(cc grpc.ClientConnInterface) ShutterServiceClient {
 	return &shutterServiceClient{cc}
 }
 
-func (c *shutterServiceClient) Shut(ctx context.Context, in *ShutRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
+func (c *shutterServiceClient) Shut(ctx context.Context, in *ShutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/shutterpb.ShutterService/Shut", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -186,14 +186,14 @@ func (c *shutterServiceClient) Shut(ctx context.Context, in *ShutRequest, opts .
 
 // ShutterServiceServer is the server API for ShutterService service.
 type ShutterServiceServer interface {
-	Shut(context.Context, *ShutRequest) (*empty.Empty, error)
+	Shut(context.Context, *ShutRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedShutterServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedShutterServiceServer struct {
 }
 
-func (*UnimplementedShutterServiceServer) Shut(context.Context, *ShutRequest) (*empty.Empty, error) {
+func (*UnimplementedShutterServiceServer) Shut(context.Context, *ShutRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Shut not implemented")
 }
 

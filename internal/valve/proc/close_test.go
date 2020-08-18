@@ -7,6 +7,7 @@ import (
 
 	"github.com/FrancescoIlario/grower/internal/mocks"
 	"github.com/FrancescoIlario/grower/internal/valve/proc"
+	vcqrs "github.com/FrancescoIlario/grower/pkg/valvepb/cqrs"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 )
 
@@ -23,7 +24,7 @@ func Test_CloseHandler(t *testing.T) {
 
 	ctx := context.Background()
 
-	cmd := &proc.CloseCommand{}
+	cmd := &vcqrs.CloseValveCommand{}
 	if err := handler.Handle(ctx, cmd); err != nil {
 		t.Fatalf("error handling Close Command: %v", err)
 	}

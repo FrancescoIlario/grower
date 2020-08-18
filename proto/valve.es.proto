@@ -9,10 +9,8 @@ import "google/protobuf/timestamp.proto";
 
 message ValveOpened {
   string Id = 1;
-  google.protobuf.Timestamp Time = 2;
 }
 
 message ValveClosed {
   string Id = 1;
-  google.protobuf.Timestamp Time = 2; 
 }

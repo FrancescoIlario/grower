@@ -8,7 +8,6 @@ import (
 	"github.com/FrancescoIlario/grower/pkg/valvepb/grpc"
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/ThreeDotsLabs/watermill/message"
-	"github.com/golang/protobuf/ptypes"
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -22,7 +21,7 @@ type valveServer struct {
 func NewGrpcServer(commandsPublisher message.Publisher) (grpc.ValveServiceServer, error) {
 	cqrsMarshaler := cqrs.ProtobufMarshaler{}
 
-	commandBus, err := cqrs.NewCommandBus(
+	cb, err := cqrs.NewCommandBus(
 		commandsPublisher,
 		func(commandName string) string {
 			// we are using queue RabbitMQ config, so we need to have topic per command type
@@ -33,7 +32,7 @@ func NewGrpcServer(commandsPublisher message.Publisher) (grpc.ValveServiceServer
 	if err != nil {
 		return nil, fmt.Errorf("cannot create command bus: %w", err)
 	}
-	return &valveServer{commandBus: commandBus}, nil
+	return &valveServer{commandBus: cb}, nil
 }
 
 func (v *valveServer) GetStatus(context.Context, *grpc.GetStatusRequest) (*grpc.GetStatusResponse, error) {
@@ -47,8 +46,7 @@ func (v *valveServer) GetStatus(context.Context, *grpc.GetStatusRequest) (*grpc.
 
 func (v *valveServer) OpenValve(ctx context.Context, req *grpc.OpenValveRequest) (*grpc.OpenValveResponse, error) {
 	cmd := &vcqrs.OpenValveCommand{
-		Id:           uuid.New().String(),
-		CreationTime: ptypes.TimestampNow(),
+		Id: uuid.New().String(),
 	}
 
 	if err := v.commandBus.Send(ctx, cmd); err != nil {
@@ -59,9 +57,8 @@ func (v *valveServer) OpenValve(ctx context.Context, req *grpc.OpenValveRequest)
 }
 
 func (v *valveServer) CloseValve(ctx context.Context, req *grpc.CloseValveRequest) (*grpc.CloseValveResponse, error) {
-	cmd := &vcqrs.OpenValveCommand{
-		Id:           uuid.New().String(),
-		CreationTime: ptypes.TimestampNow(),
+	cmd := &vcqrs.CloseValveCommand{
+		Id: uuid.New().String(),
 	}
 
 	if err := v.commandBus.Send(ctx, cmd); err != nil {

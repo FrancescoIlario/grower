@@ -13,16 +13,16 @@ valveespb: proto/valve.es.proto valvesharedpb
 	mkdir -p pkg/valvepb/es
 	protoc \
 		-I proto \
-		--go_out=plugins=grpc:pkg/valvepb/es \
-		--go_opt=paths=source_relative \
+		--gofast_out=plugins=grpc:pkg/valvepb/es \
+		--gofast_opt=paths=source_relative \
 		valve.es.proto
 
 valvecqrspb: proto/valve.cqrs.proto valvesharedpb
 	mkdir -p pkg/valvepb/cqrs
 	protoc \
 		-I proto \
-		--go_out=plugins=grpc:pkg/valvepb/cqrs \
-		--go_opt=paths=source_relative \
+		--gofast_out=plugins=grpc:pkg/valvepb/cqrs  \
+		--gofast_opt=paths=source_relative \
 		valve.cqrs.proto
 
 valvesharedpb: proto/valve.shared.proto
